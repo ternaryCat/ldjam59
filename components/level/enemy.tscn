@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://eyln1wkn80r"]
+
+[ext_resource type="Texture2D" uid="uid://cvxbsh0y4gur7" path="res://icon.svg" id="1_8gyse"]
+[ext_resource type="Script" uid="uid://dtclb7wsx66ro" path="res://components/level/enemy.gd" id="2_m8og6"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ck80t"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_8gyse")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"new_animation",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_aq6n6"]
+
+[node name="enemy" type="AnimatedSprite2D" unique_id=408884908]
+sprite_frames = SubResource("SpriteFrames_ck80t")
+animation = &"idle"
+script = ExtResource("2_m8og6")
+
+[node name="collision" type="Area2D" parent="." unique_id=2858423]
+collision_layer = 5
+collision_mask = 3
+monitoring = false
+
+[node name="shape" type="CollisionShape2D" parent="collision" unique_id=834457060]
+shape = SubResource("CircleShape2D_aq6n6")

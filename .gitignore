@@ -1,3 +1,21 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Экспорт — билд-артефакты, темплейты держим локально
+/export/
+/builds/
+export_presets.cfg
+
+# Переводы, автогенерированные из CSV
+*.translation
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Редакторы
+.vscode/
+.idea/
+*.swp
+*.swo
