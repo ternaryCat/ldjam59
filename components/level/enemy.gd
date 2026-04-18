@@ -15,6 +15,7 @@ var _player: CharacterBody2D = null
 var _hp: int
 var _buildings_in_range: Array[Node2D] = []
 var _attack_cooldown: float = 0.0
+var _target_building: Node2D = null
 
 @onready var _sprite: AnimatedSprite2D = $sprite
 @onready var _collision: Area2D = $collision
@@ -79,7 +80,7 @@ func _desired_direction() -> Vector2:
 		return v.normalized()
 	if not _buildings_in_range.is_empty():
 		return Vector2.ZERO
-	var target := _find_nearest_building()
+	var target := _pick_target_building()
 	if target == null:
 		return Vector2.ZERO
 	var to_target := target.global_position - global_position
@@ -97,17 +98,15 @@ func _attack_touching_building() -> void:
 	_attack_cooldown = attack_interval
 
 
-func _find_nearest_building() -> Node2D:
-	var best: Node2D = null
-	var best_dist := INF
-	for b in get_tree().get_nodes_in_group("buildings"):
-		if not (b is Node2D):
-			continue
-		var d := global_position.distance_squared_to((b as Node2D).global_position)
-		if d < best_dist:
-			best_dist = d
-			best = b
-	return best
+func _pick_target_building() -> Node2D:
+	if is_instance_valid(_target_building):
+		return _target_building
+	var buildings := get_tree().get_nodes_in_group("buildings")
+	if buildings.is_empty():
+		_target_building = null
+		return null
+	_target_building = buildings.pick_random() as Node2D
+	return _target_building
 
 
 func _cleanup_buildings() -> void:

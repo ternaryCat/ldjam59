@@ -18,7 +18,7 @@ script = ExtResource("2_6fnek")
 position = Vector2(187, 531)
 
 [node name="enemy2" parent="enemies" unique_id=1736653676 instance=ExtResource("3_6fnek")]
-position = Vector2(485, 643)
+position = Vector2(576, 94)
 
 [node name="towers" type="Node2D" parent="." unique_id=1975820466]
 
@@ -29,3 +29,12 @@ position = Vector2(1087, 399)
 
 [node name="building1" parent="buildings" unique_id=1782493252 instance=ExtResource("5_6o5hi")]
 position = Vector2(509, 356)
+roof_color = Color(0.66534436, 0.03264983, 0.36184147, 1)
+
+[node name="building2" parent="buildings" unique_id=271731122 instance=ExtResource("5_6o5hi")]
+position = Vector2(302, 627)
+roof_color = Color(0.4982081, 0.9425456, 0.6044682, 1)
+
+[node name="building3" parent="buildings" unique_id=1539016654 instance=ExtResource("5_6o5hi")]
+position = Vector2(103, 217)
+roof_color = Color(0.37295854, 0.2713357, 1, 1)

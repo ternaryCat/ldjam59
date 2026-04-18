@@ -1,24 +1,30 @@
 [gd_scene format=3 uid="uid://cmre6hhliwtpl"]
 
-[ext_resource type="Texture2D" uid="uid://cvxbsh0y4gur7" path="res://icon.svg" id="1_jjmsg"]
-[ext_resource type="Script" path="res://components/level/building.gd" id="2_bld01"]
+[ext_resource type="Texture2D" uid="uid://bkdnv1jf0aikg" path="res://images/home_base.png" id="2_8j0in"]
+[ext_resource type="Script" uid="uid://crvb5nvkrqx0m" path="res://components/level/building.gd" id="2_bld01"]
+[ext_resource type="Texture2D" uid="uid://ct88i1pa8w7wo" path="res://images/home_roof.png" id="3_cy7wp"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
-radius = 50.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5u12m"]
+size = Vector2(87, 73.5)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wiuyy"]
-radius = 69.72087
+radius = 52.03845
 
 [node name="building" type="StaticBody2D" unique_id=1782493252]
 collision_layer = 32
 collision_mask = 0
 script = ExtResource("2_bld01")
 
-[node name="sprite" type="Sprite2D" parent="."]
-texture = ExtResource("1_jjmsg")
+[node name="base" type="Sprite2D" parent="." unique_id=734120819]
+texture = ExtResource("2_8j0in")
 
-[node name="body_shape" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_body")
+[node name="roof" type="Sprite2D" parent="base" unique_id=618525738]
+position = Vector2(-3, -22)
+texture = ExtResource("3_cy7wp")
+
+[node name="body_shape" type="CollisionShape2D" parent="." unique_id=1278635394]
+position = Vector2(-3, 2.75)
+shape = SubResource("RectangleShape2D_5u12m")
 
 [node name="collision" type="Area2D" parent="." unique_id=1978180802]
 collision_layer = 17
