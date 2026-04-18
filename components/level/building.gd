@@ -1,5 +1,8 @@
 extends StaticBody2D
 
+signal hp_changed(current: int, max_value: int)
+signal damaged
+
 @export var max_hp: int = 100
 @export var roof_color: Color = Color(1, 1, 1):
 	set(value):
@@ -20,12 +23,16 @@ func _ready() -> void:
 	_hp = max_hp
 	_roof.modulate = roof_color
 	add_to_group("buildings")
+	hp_changed.emit(_hp, max_hp)
 
 
 func take_damage(amount: int) -> void:
 	_hp -= amount
+	damaged.emit()
 	if _hp <= 0:
+		hp_changed.emit(0, max_hp)
 		queue_free()
 		return
 	var t := 1.0 - float(_hp) / float(max_hp)
 	_sprite.modulate = HEALTHY_COLOR.lerp(DEAD_COLOR, t)
+	hp_changed.emit(_hp, max_hp)

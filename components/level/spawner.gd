@@ -34,7 +34,9 @@ func _process(delta: float) -> void:
 	_spawn()
 
 
-func start_wave() -> void:
+func start_wave(count: int = -1) -> void:
+	if count >= 0:
+		max_spawns = count
 	_spawned = 0
 	_cooldown = 0.0
 	_finished = false

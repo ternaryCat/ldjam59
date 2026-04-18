@@ -203,6 +203,6 @@ roof_color = Color(0.37295854, 0.2713357, 1, 1)
 
 [node name="building4" parent="buildings" unique_id=1677120667 instance=ExtResource("5_6o5hi")]
 position = Vector2(128, 567)
-roof_color = Color(0.37295854, 0.2713357, 1, 1)
+roof_color = Color(0.18423542, 0.49479502, 0.48123795, 1)
 
 [node name="hud" parent="." unique_id=444000005 instance=ExtResource("9_hud")]

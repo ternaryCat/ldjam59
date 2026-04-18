@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://components/level/buildings_panel.gd" id="1_panel"]
+
+[node name="buildings_panel" type="VBoxContainer"]
+script = ExtResource("1_panel")
+theme_override_constants/separation = 6

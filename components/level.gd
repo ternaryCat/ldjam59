@@ -28,9 +28,12 @@ const TILE_MULT := {
 	2: 1.5,
 }
 
+const WAVE_COUNTS: Array[int] = [10, 30, 60, 100, 300]
+
 @export var starting_money: int = 300
 @export var wave_reward: int = 150
-@export var total_waves: int = 5
+
+var total_waves: int = WAVE_COUNTS.size()
 
 var _money: int
 var _phase: Phase = Phase.BUILD
@@ -68,6 +71,7 @@ func _ready() -> void:
 	_buildings_remaining = buildings.size()
 	for b in buildings:
 		b.tree_exited.connect(_on_building_lost)
+	_hud.set_buildings(buildings)
 	_enter_build()
 
 
@@ -239,6 +243,8 @@ func _enter_build() -> void:
 	_build_grid.visible = true
 	_hud.set_money(_money)
 	_hud.show_build(_wave_index + 1, total_waves)
+	var next_count: int = WAVE_COUNTS[_wave_index] if _wave_index < total_waves else 0
+	_hud.set_next_wave(next_count)
 
 
 func _enter_wave() -> void:
@@ -248,10 +254,20 @@ func _enter_wave() -> void:
 	_clear_preview(true)
 	_deselect()
 	_build_grid.visible = false
-	for spawner in _spawners.get_children():
-		if spawner.has_method("start_wave"):
-			spawner.start_wave()
-			_active_spawners += 1
+	var spawner_list: Array = []
+	for s in _spawners.get_children():
+		if s.has_method("start_wave"):
+			spawner_list.append(s)
+	var total_count: int = WAVE_COUNTS[_wave_index - 1]
+	var per_spawner: int = 0
+	var remainder: int = 0
+	if not spawner_list.is_empty():
+		per_spawner = total_count / spawner_list.size()
+		remainder = total_count - per_spawner * spawner_list.size()
+	for i in spawner_list.size():
+		var c: int = per_spawner + (1 if i < remainder else 0)
+		spawner_list[i].start_wave(c)
+		_active_spawners += 1
 	_hud.show_wave(_wave_index, total_waves)
 
 

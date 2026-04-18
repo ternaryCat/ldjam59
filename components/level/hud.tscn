@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://components/level/hud.gd" id="1_hud"]
+[ext_resource type="PackedScene" path="res://components/level/buildings_panel.tscn" id="2_bldp"]
+[ext_resource type="PackedScene" path="res://components/level/wave_preview.tscn" id="3_wvp"]
 
 [node name="hud" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -29,6 +31,29 @@ offset_right = 600.0
 offset_bottom = 40.0
 text = "Build"
 mouse_filter = 2
+
+[node name="buildings_panel" parent="root" instance=ExtResource("2_bldp")]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+mouse_filter = 2
+
+[node name="wave_preview" parent="root" instance=ExtResource("3_wvp")]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -140.0
+offset_right = 100.0
+offset_bottom = -70.0
 
 [node name="start_wave" type="Button" parent="root"]
 layout_mode = 1

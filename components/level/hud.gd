@@ -13,8 +13,11 @@ signal cancel_requested
 @onready var _confirm_panel: PanelContainer = $root/confirm
 @onready var _confirm_button: Button = $root/confirm/row/confirm_btn
 @onready var _cancel_button: Button = $root/confirm/row/cancel_btn
+@onready var _buildings_panel: VBoxContainer = $root/buildings_panel
+@onready var _wave_preview: PanelContainer = $root/wave_preview
 
 var _in_build: bool = false
+var _has_next_wave: bool = false
 
 
 func _ready() -> void:
@@ -23,6 +26,7 @@ func _ready() -> void:
 	_cancel_button.pressed.connect(func() -> void: cancel_requested.emit())
 	_picker.visible = false
 	_confirm_panel.visible = false
+	_wave_preview.visible = false
 
 
 func set_money(value: int) -> void:
@@ -32,33 +36,32 @@ func set_money(value: int) -> void:
 func show_build(next_wave: int, total: int) -> void:
 	_in_build = true
 	_phase_label.text = "Build — next: wave %d / %d" % [next_wave, total]
-	if not _picker.visible and not _confirm_panel.visible:
-		_start_button.visible = true
 	_start_button.disabled = false
+	_refresh_bottom()
 
 
 func show_wave(wave: int, total: int) -> void:
 	_in_build = false
 	_phase_label.text = "Wave %d / %d" % [wave, total]
-	_start_button.visible = false
 	_picker.visible = false
 	_confirm_panel.visible = false
+	_refresh_bottom()
 
 
 func show_victory() -> void:
 	_in_build = false
 	_phase_label.text = "Victory!"
-	_start_button.visible = false
 	_picker.visible = false
 	_confirm_panel.visible = false
+	_refresh_bottom()
 
 
 func show_defeat() -> void:
 	_in_build = false
 	_phase_label.text = "Defeat"
-	_start_button.visible = false
 	_picker.visible = false
 	_confirm_panel.visible = false
+	_refresh_bottom()
 
 
 func show_picker(items: Array) -> void:
@@ -68,13 +71,12 @@ func show_picker(items: Array) -> void:
 		_picker_row.add_child(_build_card(item))
 	_picker.visible = true
 	_confirm_panel.visible = false
-	_start_button.visible = false
+	_refresh_bottom()
 
 
 func hide_picker() -> void:
 	_picker.visible = false
-	if _in_build and not _confirm_panel.visible:
-		_start_button.visible = true
+	_refresh_bottom()
 
 
 func show_confirm(cost: int, affordable: bool) -> void:
@@ -82,13 +84,29 @@ func show_confirm(cost: int, affordable: bool) -> void:
 	_confirm_button.disabled = not affordable
 	_confirm_panel.visible = true
 	_picker.visible = false
-	_start_button.visible = false
+	_refresh_bottom()
 
 
 func hide_confirm() -> void:
 	_confirm_panel.visible = false
-	if _in_build and not _picker.visible:
-		_start_button.visible = true
+	_refresh_bottom()
+
+
+func set_buildings(buildings: Array) -> void:
+	_buildings_panel.set_buildings(buildings)
+
+
+func set_next_wave(count: int) -> void:
+	_has_next_wave = count > 0
+	if _has_next_wave:
+		_wave_preview.set_count(count)
+	_refresh_bottom()
+
+
+func _refresh_bottom() -> void:
+	var bottom_free := _in_build and not _picker.visible and not _confirm_panel.visible
+	_start_button.visible = bottom_free
+	_wave_preview.visible = bottom_free and _has_next_wave
 
 
 func _build_card(item: Dictionary) -> Control:
