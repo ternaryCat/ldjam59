@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cwuym685gkq6n"]
+
+[ext_resource type="Texture2D" uid="uid://cvxbsh0y4gur7" path="res://icon.svg" id="1_hff0m"]
+[ext_resource type="Script" uid="uid://c7hpxlg481s5b" path="res://components/level/tower/shot.gd" id="2_shot"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hff0m"]
+radius = 67.11929
+
+[node name="Shot" type="Sprite2D" unique_id=145083089]
+texture = ExtResource("1_hff0m")
+script = ExtResource("2_shot")
+
+[node name="collision" type="Area2D" parent="." unique_id=1307586098]
+collision_layer = 8
+collision_mask = 4
+
+[node name="shape" type="CollisionShape2D" parent="collision" unique_id=1324468476]
+shape = SubResource("CircleShape2D_hff0m")

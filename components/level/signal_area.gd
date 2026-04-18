@@ -8,6 +8,7 @@ extends Area2D
 
 
 func _ready() -> void:
+	add_to_group("signal_field")
 	_set_active(false)
 
 

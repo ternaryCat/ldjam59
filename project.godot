@@ -57,6 +57,7 @@ activate={
 2d_physics/layer_1="physic_objects"
 2d_physics/layer_2="signal_area"
 2d_physics/layer_3="enemy"
+2d_physics/layer_4="shot"
 
 [physics]
 

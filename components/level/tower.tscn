@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dmyske8pf6rii"]
+
+[ext_resource type="Texture2D" uid="uid://cvxbsh0y4gur7" path="res://icon.svg" id="1_eg74g"]
+[ext_resource type="Script" uid="uid://dkf2f6hycklk2" path="res://components/level/tower.gd" id="2_ovbxm"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ovbxm"]
+radius = 497.00003
+
+[node name="tower" type="Sprite2D" unique_id=239535656]
+texture = ExtResource("1_eg74g")
+script = ExtResource("2_ovbxm")
+
+[node name="vision" type="Area2D" parent="." unique_id=508446376]
+
+[node name="shape" type="CollisionShape2D" parent="vision" unique_id=461566366]
+rotation = -0.0024932972
+shape = SubResource("CircleShape2D_ovbxm")
