@@ -68,15 +68,27 @@ func _physics_process(delta: float) -> void:
 			_slow_factor = 1.0
 			_refresh_tint()
 	var player_controlled: bool = _in_field and Input.is_action_pressed("activate")
-	var direction := _compose_direction(player_controlled)
+	var slowed: bool = _slow_time_left > 0.0
+	var fully_locked: bool = player_controlled and slowed
+	var direction: Vector2
+	if fully_locked:
+		direction = _player_direction()
+	elif player_controlled:
+		direction = _player_direction() + _own_direction() * PLAYER_CTRL_ESCAPE_FACTOR
+	else:
+		direction = _own_direction()
 	if direction != Vector2.ZERO and not player_controlled:
 		_drift_angle += randf_range(-_drift_impulse, _drift_impulse) * delta
 		_drift_angle -= _drift_angle * DRIFT_DECAY * delta
 		_drift_angle = clampf(_drift_angle, -_drift_cap, _drift_cap)
 		direction = direction.rotated(_drift_angle)
-	var move_mult := _speed_mult * _slow_factor
-	if player_controlled:
+	var move_mult := _speed_mult
+	if fully_locked:
 		move_mult *= PLAYER_CTRL_SPEED_FACTOR
+	elif player_controlled:
+		move_mult *= PLAYER_CTRL_SPEED_FACTOR * _slow_factor
+	else:
+		move_mult *= _slow_factor
 	velocity = direction * speed * move_mult + _crowd_push()
 	move_and_slide()
 	var anim: StringName = &"walk" if direction != Vector2.ZERO else &"idle"
@@ -84,7 +96,8 @@ func _physics_process(delta: float) -> void:
 		_sprite.play(anim)
 	if direction.x != 0.0:
 		_sprite.flip_h = direction.x < 0.0
-	_attack_touching_building(player_controlled)
+	if not fully_locked:
+		_attack_touching_building(player_controlled)
 
 
 func _crowd_push() -> Vector2:
@@ -128,14 +141,6 @@ func _refresh_tint() -> void:
 	_sprite.modulate = base
 
 
-func _compose_direction(player_controlled: bool) -> Vector2:
-	if not player_controlled:
-		return _own_direction()
-	var player_dir := _player_direction()
-	var own_dir := _own_direction()
-	return player_dir + own_dir * PLAYER_CTRL_ESCAPE_FACTOR
-
-
 func _player_direction() -> Vector2:
 	if _player == null:
 		return Vector2.ZERO
@@ -157,14 +162,14 @@ func _own_direction() -> Vector2:
 	return to_target.normalized()
 
 
-func _attack_touching_building(slowed: bool) -> void:
+func _attack_touching_building(player_controlled: bool) -> void:
 	if _attack_cooldown > 0.0 or _buildings_in_range.is_empty():
 		return
 	var target := _buildings_in_range[0]
 	if target.has_method("take_damage"):
 		target.take_damage(attack_damage)
 	var interval := attack_interval
-	if slowed:
+	if player_controlled:
 		interval *= PLAYER_CTRL_ATTACK_MULT
 	_attack_cooldown = interval
 

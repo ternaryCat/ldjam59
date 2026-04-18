@@ -1,5 +1,7 @@
 extends Node2D
 
+const IMPACT_SCENE: PackedScene = preload("res://components/level/mortar/impact.tscn")
+
 @export var peak_height: float = 160.0
 @export var splash_radius: float = 120.0
 @export var splash_damage: int = 25
@@ -34,6 +36,9 @@ func _process(delta: float) -> void:
 
 
 func _impact() -> void:
+	var vfx := IMPACT_SCENE.instantiate()
+	get_parent().add_child(vfx)
+	vfx.global_position = _to
 	var space_state := get_world_2d().direct_space_state
 	var params := PhysicsShapeQueryParameters2D.new()
 	var shape := CircleShape2D.new()
