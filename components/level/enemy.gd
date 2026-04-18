@@ -16,6 +16,7 @@ var _hp: int
 var _buildings_in_range: Array[Node2D] = []
 var _attack_cooldown: float = 0.0
 var _target_building: Node2D = null
+var _query: PhysicsShapeQueryParameters2D
 
 @onready var _sprite: AnimatedSprite2D = $sprite
 @onready var _collision: Area2D = $collision
@@ -26,6 +27,13 @@ func _ready() -> void:
 	_hp = max_hp
 	_collision.area_entered.connect(_on_area_entered)
 	_collision.area_exited.connect(_on_area_exited)
+	_query = PhysicsShapeQueryParameters2D.new()
+	var shape := CircleShape2D.new()
+	shape.radius = SEPARATION_DIST
+	_query.shape = shape
+	_query.collision_mask = 64
+	_query.collide_with_areas = false
+	_query.exclude = [get_rid()]
 
 
 func _physics_process(delta: float) -> void:
@@ -41,24 +49,22 @@ func _physics_process(delta: float) -> void:
 
 
 func _crowd_push() -> Vector2:
+	_query.transform = Transform2D(0.0, global_position)
+	var space_state := get_world_2d().direct_space_state
+	var hits := space_state.intersect_shape(_query, 8)
 	var push := Vector2.ZERO
-	for other in get_tree().get_nodes_in_group("enemies"):
-		if other == self:
+	var sep_sq := SEPARATION_DIST * SEPARATION_DIST
+	for hit in hits:
+		var other = hit.collider
+		if not (other is Node2D):
 			continue
-		push += _repel_from(other)
-	for p in get_tree().get_nodes_in_group("player"):
-		push += _repel_from(p)
+		var offset := global_position - (other as Node2D).global_position
+		var d_sq := offset.length_squared()
+		if d_sq >= sep_sq or d_sq <= 0.0001:
+			continue
+		var d := sqrt(d_sq)
+		push += offset / d * (SEPARATION_DIST - d)
 	return push * NEIGHBOR_PUSH
-
-
-func _repel_from(other: Node) -> Vector2:
-	if not (other is Node2D):
-		return Vector2.ZERO
-	var offset := global_position - (other as Node2D).global_position
-	var d := offset.length()
-	if d >= SEPARATION_DIST or d <= 0.01:
-		return Vector2.ZERO
-	return offset / d * (SEPARATION_DIST - d)
 
 
 func take_damage(amount: int) -> void:
