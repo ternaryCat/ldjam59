@@ -9,6 +9,14 @@ const HEALTHY_COLOR: Color = Color(1, 1, 1)
 const DEAD_COLOR: Color = Color(1, 0.2, 0.2)
 const SEPARATION_DIST: float = 45.0
 const NEIGHBOR_PUSH: float = 15.0
+const DRIFT_IMPULSE_MIN: float = 2.0
+const DRIFT_IMPULSE_MAX: float = 5.0
+const DRIFT_CAP_MIN: float = 0.35
+const DRIFT_CAP_MAX: float = 0.65
+const DRIFT_DECAY: float = 1.5
+const SPEED_MULT_MIN: float = 0.85
+const SPEED_MULT_MAX: float = 1.15
+const TARGET_JITTER: float = 25.0
 
 var _in_field: bool = false
 var _player: CharacterBody2D = null
@@ -17,6 +25,11 @@ var _buildings_in_range: Array[Node2D] = []
 var _attack_cooldown: float = 0.0
 var _target_building: Node2D = null
 var _query: PhysicsShapeQueryParameters2D
+var _drift_impulse: float = 0.0
+var _drift_cap: float = 0.0
+var _drift_angle: float = 0.0
+var _speed_mult: float = 1.0
+var _target_offset: Vector2 = Vector2.ZERO
 
 @onready var _sprite: AnimatedSprite2D = $sprite
 @onready var _collision: Area2D = $collision
@@ -34,17 +47,27 @@ func _ready() -> void:
 	_query.collision_mask = 64
 	_query.collide_with_areas = false
 	_query.exclude = [get_rid()]
+	_drift_impulse = randf_range(DRIFT_IMPULSE_MIN, DRIFT_IMPULSE_MAX)
+	_drift_cap = randf_range(DRIFT_CAP_MIN, DRIFT_CAP_MAX)
+	_speed_mult = randf_range(SPEED_MULT_MIN, SPEED_MULT_MAX)
+	_target_offset = Vector2.from_angle(randf() * TAU) * randf_range(0.0, TARGET_JITTER)
 
 
 func _physics_process(delta: float) -> void:
 	_attack_cooldown -= delta
 	_cleanup_buildings()
+	var player_controlled: bool = _in_field and Input.is_action_pressed("activate")
 	var direction := _desired_direction()
-	velocity = direction * speed + _crowd_push()
+	if direction != Vector2.ZERO and not player_controlled:
+		_drift_angle += randf_range(-_drift_impulse, _drift_impulse) * delta
+		_drift_angle -= _drift_angle * DRIFT_DECAY * delta
+		_drift_angle = clampf(_drift_angle, -_drift_cap, _drift_cap)
+		direction = direction.rotated(_drift_angle)
+	velocity = direction * speed * _speed_mult + _crowd_push()
 	move_and_slide()
 	if direction != Vector2.ZERO:
 		rotation = direction.angle()
-	if not (_in_field and Input.is_action_pressed("activate")):
+	if not player_controlled:
 		_attack_touching_building()
 
 
@@ -89,7 +112,7 @@ func _desired_direction() -> Vector2:
 	var target := _pick_target_building()
 	if target == null:
 		return Vector2.ZERO
-	var to_target := target.global_position - global_position
+	var to_target := target.global_position + _target_offset - global_position
 	if to_target == Vector2.ZERO:
 		return Vector2.ZERO
 	return to_target.normalized()
