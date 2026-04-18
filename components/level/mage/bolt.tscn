@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://dmagebolt001"]
+
+[ext_resource type="Texture2D" uid="uid://dkudx226kqpc2" path="res://images/arrow.png" id="1_arrow"]
+[ext_resource type="Script" path="res://components/level/mage/bolt.gd" id="2_bolt"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bolt"]
+radius = 6.0
+
+[node name="bolt" type="Sprite2D"]
+modulate = Color(0.55, 0.45, 1.3, 1)
+texture = ExtResource("1_arrow")
+script = ExtResource("2_bolt")
+
+[node name="collision" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 4
+
+[node name="shape" type="CollisionShape2D" parent="collision"]
+shape = SubResource("CircleShape2D_bolt")

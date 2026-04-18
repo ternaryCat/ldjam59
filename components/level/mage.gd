@@ -1,9 +1,9 @@
 extends Node2D
 
-const SHOT_SCENE: PackedScene = preload("res://components/level/tower/shot.tscn")
+const BOLT_SCENE: PackedScene = preload("res://components/level/mage/bolt.tscn")
 
-@export var fire_interval: float = 0.6
-@export var shot_speed: float = 700.0
+@export var fire_interval: float = 1.2
+@export var initial_spread: float = 0.6
 
 var _targets: Array[Node2D] = []
 var _cooldown: float = 0.0
@@ -36,19 +36,20 @@ func _physics_process(delta: float) -> void:
 
 func _on_target_entered(area: Area2D) -> void:
 	var target := area.get_parent()
-	if target is Node2D and target.is_in_group("enemies"):
+	if target is CharacterBody2D:
 		_targets.append(target)
 
 
 func _on_target_exited(area: Area2D) -> void:
 	var target := area.get_parent()
-	if target is Node2D and target.is_in_group("enemies"):
+	if target is CharacterBody2D:
 		_targets.erase(target)
 
 
 func _fire(target: Node2D) -> void:
-	var shot := SHOT_SCENE.instantiate()
-	get_parent().add_child(shot)
-	shot.global_position = _shoot_point.global_position
-	var dir := (target.global_position - _shoot_point.global_position).normalized()
-	shot.launch(dir, shot_speed)
+	var bolt := BOLT_SCENE.instantiate()
+	get_parent().add_child(bolt)
+	bolt.global_position = _shoot_point.global_position
+	var to_target := (target.global_position - _shoot_point.global_position).normalized()
+	var dir := to_target.rotated(randf_range(-initial_spread, initial_spread))
+	bolt.launch(dir, target)

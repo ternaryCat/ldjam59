@@ -68,3 +68,5 @@ script = ExtResource("2_sigar")
 [node name="shape" type="CollisionShape2D" parent="signal_area" unique_id=1013752150]
 visible = false
 shape = SubResource("CircleShape2D_d7wyv")
+
+[node name="camera" type="Camera2D" parent="." unique_id=1020766271]

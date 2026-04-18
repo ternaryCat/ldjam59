@@ -3,10 +3,14 @@
 [ext_resource type="PackedScene" uid="uid://b6tdgp3g2i7k2" path="res://components/level/player.tscn" id="1_ouk1x"]
 [ext_resource type="Script" uid="uid://cmb27xme82kug" path="res://components/level/player.gd" id="2_6fnek"]
 [ext_resource type="PackedScene" uid="uid://qllk5gttkw2r" path="res://components/level/spawner.tscn" id="3_6o5hi"]
-[ext_resource type="PackedScene" uid="uid://dmyske8pf6rii" path="res://components/level/tower.tscn" id="4_alc75"]
 [ext_resource type="PackedScene" uid="uid://cmre6hhliwtpl" path="res://components/level/building.tscn" id="5_6o5hi"]
+[ext_resource type="Script" uid="uid://5uatl1fxkbyk" path="res://components/level.gd" id="6_lvl"]
+[ext_resource type="Script" uid="uid://ihmdpqv14820" path="res://components/level/build_grid.gd" id="7_grd"]
+[ext_resource type="PackedScene" path="res://components/level/build_tile.tscn" id="8_til"]
+[ext_resource type="PackedScene" path="res://components/level/hud.tscn" id="9_hud"]
 
 [node name="level" type="Node2D" unique_id=1124570366]
+script = ExtResource("6_lvl")
 
 [node name="player" parent="." unique_id=510700806 instance=ExtResource("1_ouk1x")]
 position = Vector2(311, 232)
@@ -22,19 +26,143 @@ position = Vector2(1172, 128)
 
 [node name="towers" type="Node2D" parent="." unique_id=1975820466]
 
-[node name="tower" parent="towers" unique_id=239535656 instance=ExtResource("4_alc75")]
-position = Vector2(1087, 399)
+[node name="build_grid" type="Node2D" parent="." unique_id=444000001]
+script = ExtResource("7_grd")
+
+[node name="tile" parent="build_grid" unique_id=444000002 instance=ExtResource("8_til")]
+position = Vector2(243, 48)
+tile_color = 2
+
+[node name="tile2" parent="build_grid" unique_id=444000003 instance=ExtResource("8_til")]
+position = Vector2(339, 48)
+tile_color = 2
+
+[node name="tile3" parent="build_grid" unique_id=444000004 instance=ExtResource("8_til")]
+position = Vector2(339, 144)
+tile_color = 2
+
+[node name="tile4" parent="build_grid" unique_id=1000582832 instance=ExtResource("8_til")]
+position = Vector2(243, 144)
+tile_color = 2
+
+[node name="tile5" parent="build_grid" unique_id=1188777708 instance=ExtResource("8_til")]
+position = Vector2(242, 240)
+tile_color = 2
+
+[node name="tile6" parent="build_grid" unique_id=189614196 instance=ExtResource("8_til")]
+position = Vector2(338, 240)
+tile_color = 2
+
+[node name="tile7" parent="build_grid" unique_id=1761058268 instance=ExtResource("8_til")]
+position = Vector2(338, 336)
+tile_color = 2
+
+[node name="tile8" parent="build_grid" unique_id=802678578 instance=ExtResource("8_til")]
+position = Vector2(242, 336)
+tile_color = 2
+
+[node name="tile9" parent="build_grid" unique_id=745879845 instance=ExtResource("8_til")]
+position = Vector2(546, 47)
+tile_color = 1
+
+[node name="tile10" parent="build_grid" unique_id=364192546 instance=ExtResource("8_til")]
+position = Vector2(642, 47)
+tile_color = 1
+
+[node name="tile11" parent="build_grid" unique_id=1906985974 instance=ExtResource("8_til")]
+position = Vector2(642, 143)
+tile_color = 2
+
+[node name="tile12" parent="build_grid" unique_id=1008176380 instance=ExtResource("8_til")]
+position = Vector2(546, 143)
+tile_color = 2
+
+[node name="tile13" parent="build_grid" unique_id=493589795 instance=ExtResource("8_til")]
+position = Vector2(893, 49)
+
+[node name="tile14" parent="build_grid" unique_id=1032443808 instance=ExtResource("8_til")]
+position = Vector2(989, 49)
+tile_color = 1
+
+[node name="tile15" parent="build_grid" unique_id=2094010589 instance=ExtResource("8_til")]
+position = Vector2(989, 145)
+tile_color = 2
+
+[node name="tile16" parent="build_grid" unique_id=1962524771 instance=ExtResource("8_til")]
+position = Vector2(893, 145)
+
+[node name="tile17" parent="build_grid" unique_id=1738108290 instance=ExtResource("8_til")]
+position = Vector2(673, 274)
+
+[node name="tile18" parent="build_grid" unique_id=1663742170 instance=ExtResource("8_til")]
+position = Vector2(769, 274)
+tile_color = 2
+
+[node name="tile19" parent="build_grid" unique_id=1468416974 instance=ExtResource("8_til")]
+position = Vector2(769, 370)
+tile_color = 2
+
+[node name="tile20" parent="build_grid" unique_id=344919629 instance=ExtResource("8_til")]
+position = Vector2(673, 370)
+
+[node name="tile21" parent="build_grid" unique_id=152350892 instance=ExtResource("8_til")]
+position = Vector2(-160, 57)
+tile_color = 1
+
+[node name="tile22" parent="build_grid" unique_id=1544474446 instance=ExtResource("8_til")]
+position = Vector2(-64, 57)
+tile_color = 1
+
+[node name="tile23" parent="build_grid" unique_id=1366694859 instance=ExtResource("8_til")]
+position = Vector2(-64, 153)
+tile_color = 1
+
+[node name="tile24" parent="build_grid" unique_id=26297863 instance=ExtResource("8_til")]
+position = Vector2(-160, 153)
+tile_color = 1
+
+[node name="tile25" parent="build_grid" unique_id=1677403046 instance=ExtResource("8_til")]
+position = Vector2(-163, 365)
+tile_color = 2
+
+[node name="tile26" parent="build_grid" unique_id=2123819023 instance=ExtResource("8_til")]
+position = Vector2(-67, 365)
+tile_color = 1
+
+[node name="tile27" parent="build_grid" unique_id=450406452 instance=ExtResource("8_til")]
+position = Vector2(-67, 461)
+tile_color = 2
+
+[node name="tile28" parent="build_grid" unique_id=966476956 instance=ExtResource("8_til")]
+position = Vector2(-163, 461)
+tile_color = 2
+
+[node name="tile29" parent="build_grid" unique_id=1855663695 instance=ExtResource("8_til")]
+position = Vector2(1071, 383)
+tile_color = 1
+
+[node name="tile30" parent="build_grid" unique_id=1977441354 instance=ExtResource("8_til")]
+position = Vector2(1167, 383)
+tile_color = 1
+
+[node name="tile31" parent="build_grid" unique_id=838491060 instance=ExtResource("8_til")]
+position = Vector2(1167, 479)
+
+[node name="tile32" parent="build_grid" unique_id=1409407368 instance=ExtResource("8_til")]
+position = Vector2(1071, 479)
 
 [node name="buildings" type="Node2D" parent="." unique_id=819838869]
 
 [node name="building1" parent="buildings" unique_id=1782493252 instance=ExtResource("5_6o5hi")]
-position = Vector2(509, 356)
+position = Vector2(1069, 657)
 roof_color = Color(0.66534436, 0.03264983, 0.36184147, 1)
 
 [node name="building2" parent="buildings" unique_id=271731122 instance=ExtResource("5_6o5hi")]
-position = Vector2(302, 627)
+position = Vector2(421, 591)
 roof_color = Color(0.4982081, 0.9425456, 0.6044682, 1)
 
 [node name="building3" parent="buildings" unique_id=1539016654 instance=ExtResource("5_6o5hi")]
 position = Vector2(103, 217)
 roof_color = Color(0.37295854, 0.2713357, 1, 1)
+
+[node name="hud" parent="." unique_id=444000005 instance=ExtResource("9_hud")]

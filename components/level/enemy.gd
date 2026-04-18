@@ -7,6 +7,7 @@ extends CharacterBody2D
 
 const HEALTHY_COLOR: Color = Color(1, 1, 1)
 const DEAD_COLOR: Color = Color(1, 0.2, 0.2)
+const SLOW_TINT: Color = Color(0.55, 0.7, 1.2)
 const SEPARATION_DIST: float = 45.0
 const NEIGHBOR_PUSH: float = 15.0
 const DRIFT_IMPULSE_MIN: float = 2.0
@@ -30,6 +31,8 @@ var _drift_cap: float = 0.0
 var _drift_angle: float = 0.0
 var _speed_mult: float = 1.0
 var _target_offset: Vector2 = Vector2.ZERO
+var _slow_factor: float = 1.0
+var _slow_time_left: float = 0.0
 
 @onready var _sprite: AnimatedSprite2D = $sprite
 @onready var _collision: Area2D = $collision
@@ -56,6 +59,11 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	_attack_cooldown -= delta
 	_cleanup_buildings()
+	if _slow_time_left > 0.0:
+		_slow_time_left -= delta
+		if _slow_time_left <= 0.0:
+			_slow_factor = 1.0
+			_refresh_tint()
 	var player_controlled: bool = _in_field and Input.is_action_pressed("activate")
 	var direction := _desired_direction()
 	if direction != Vector2.ZERO and not player_controlled:
@@ -63,7 +71,7 @@ func _physics_process(delta: float) -> void:
 		_drift_angle -= _drift_angle * DRIFT_DECAY * delta
 		_drift_angle = clampf(_drift_angle, -_drift_cap, _drift_cap)
 		direction = direction.rotated(_drift_angle)
-	velocity = direction * speed * _speed_mult + _crowd_push()
+	velocity = direction * speed * _speed_mult * _slow_factor + _crowd_push()
 	move_and_slide()
 	if direction != Vector2.ZERO:
 		rotation = direction.angle()
@@ -95,8 +103,21 @@ func take_damage(amount: int) -> void:
 	if _hp <= 0:
 		queue_free()
 		return
+	_refresh_tint()
+
+
+func apply_slow(duration: float, factor: float = 0.35) -> void:
+	_slow_factor = minf(_slow_factor, factor)
+	_slow_time_left = maxf(_slow_time_left, duration)
+	_refresh_tint()
+
+
+func _refresh_tint() -> void:
 	var t := 1.0 - float(_hp) / float(max_hp)
-	_sprite.modulate = HEALTHY_COLOR.lerp(DEAD_COLOR, t)
+	var base := HEALTHY_COLOR.lerp(DEAD_COLOR, t)
+	if _slow_time_left > 0.0:
+		base = base * SLOW_TINT
+	_sprite.modulate = base
 
 
 func _desired_direction() -> Vector2:

@@ -1,15 +1,16 @@
 extends Node2D
 
-const SHOT_SCENE: PackedScene = preload("res://components/level/tower/shot.tscn")
+const SHELL_SCENE: PackedScene = preload("res://components/level/mortar/shell.tscn")
 
-@export var fire_interval: float = 0.6
-@export var shot_speed: float = 700.0
+@export var fire_interval: float = 1.8
+@export var min_range: float = 180.0
+@export var flight_time_per_px: float = 0.002
+@export var flight_time_min: float = 0.6
 
 var _targets: Array[Node2D] = []
 var _cooldown: float = 0.0
 
 @onready var _vision: Area2D = $vision
-@onready var _head: Sprite2D = $head
 @onready var _shoot_point: Node2D = $head/shoot_point
 
 
@@ -23,15 +24,24 @@ func _physics_process(delta: float) -> void:
 	for i in range(_targets.size() - 1, -1, -1):
 		if not is_instance_valid(_targets[i]):
 			_targets.remove_at(i)
-	if _targets.is_empty():
-		return
-	var target := _targets[0]
-	_head.look_at(target.global_position)
-	_head.rotation += PI
 	if _cooldown > 0.0:
+		return
+	var target := _first_valid_target()
+	if target == null:
 		return
 	_fire(target)
 	_cooldown = fire_interval
+
+
+func _first_valid_target() -> Node2D:
+	var min_sq := min_range * min_range
+	for t in _targets:
+		if not is_instance_valid(t):
+			continue
+		if global_position.distance_squared_to(t.global_position) < min_sq:
+			continue
+		return t
+	return null
 
 
 func _on_target_entered(area: Area2D) -> void:
@@ -47,8 +57,10 @@ func _on_target_exited(area: Area2D) -> void:
 
 
 func _fire(target: Node2D) -> void:
-	var shot := SHOT_SCENE.instantiate()
-	get_parent().add_child(shot)
-	shot.global_position = _shoot_point.global_position
-	var dir := (target.global_position - _shoot_point.global_position).normalized()
-	shot.launch(dir, shot_speed)
+	var shell := SHELL_SCENE.instantiate()
+	get_parent().add_child(shell)
+	var from := _shoot_point.global_position
+	var to := target.global_position
+	var dist := from.distance_to(to)
+	var flight_time := maxf(dist * flight_time_per_px, flight_time_min)
+	shell.launch(from, to, flight_time)

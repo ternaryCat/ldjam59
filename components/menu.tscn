@@ -58,6 +58,7 @@ dialog_text = "Скоро: громкость, музыка, эффекты."
 [node name="spawner" parent="ui" unique_id=1588589298 instance=ExtResource("2_np6pp")]
 position = Vector2(116, 665)
 max_spawns = 40
+auto_start = true
 
 [node name="building" parent="ui" unique_id=1782493252 instance=ExtResource("3_mwg2q")]
 position = Vector2(1005, 513)
