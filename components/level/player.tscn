@@ -1,6 +1,18 @@
 [gd_scene format=3 uid="uid://b6tdgp3g2i7k2"]
 
 [ext_resource type="Texture2D" uid="uid://cvxbsh0y4gur7" path="res://icon.svg" id="1_d7wyv"]
+[ext_resource type="Script" uid="uid://cp0ass2c5bqyc" path="res://components/level/signal_area.gd" id="2_sigar"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_d7wyv"]
+radius = 327.0
 
 [node name="player" type="Sprite2D" unique_id=510700806]
 texture = ExtResource("1_d7wyv")
+
+[node name="signal_area" type="Area2D" parent="." unique_id=1013841445]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("2_sigar")
+
+[node name="shape" type="CollisionShape2D" parent="signal_area" unique_id=1013752150]
+shape = SubResource("CircleShape2D_d7wyv")
