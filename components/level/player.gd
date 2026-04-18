@@ -7,6 +7,8 @@ const ENEMY_PUSH: float = 6.0
 
 var _query: PhysicsShapeQueryParameters2D
 
+@onready var _sprite: AnimatedSprite2D = $sprite
+
 
 func _ready() -> void:
 	add_to_group("player")
@@ -23,6 +25,11 @@ func _physics_process(delta: float) -> void:
 	var direction := Input.get_vector("left", "right", "top", "down")
 	velocity = direction * speed + _enemy_push()
 	move_and_slide()
+	var anim: StringName = &"walk" if direction != Vector2.ZERO else &"idle"
+	if _sprite.animation != anim:
+		_sprite.play(anim)
+	if direction.x != 0.0:
+		_sprite.flip_h = direction.x < 0.0
 
 
 func _enemy_push() -> Vector2:

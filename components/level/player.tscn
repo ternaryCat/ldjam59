@@ -1,10 +1,49 @@
 [gd_scene format=3 uid="uid://b6tdgp3g2i7k2"]
 
-[ext_resource type="Texture2D" uid="uid://cvxbsh0y4gur7" path="res://icon.svg" id="1_d7wyv"]
+[ext_resource type="Texture2D" uid="uid://cxq7suxtulbkv" path="res://images/gg1.png" id="1_oiay5"]
+[ext_resource type="Texture2D" uid="uid://dvdwouqmsy4ct" path="res://images/gg2.png" id="2_7e4us"]
 [ext_resource type="Script" uid="uid://cp0ass2c5bqyc" path="res://components/level/signal_area.gd" id="2_sigar"]
+[ext_resource type="Texture2D" uid="uid://dr37djk6td0ke" path="res://images/gg3.png" id="3_6usvx"]
+[ext_resource type="Texture2D" uid="uid://kiw4mg1epn73" path="res://images/gg4.png" id="4_yu5s1"]
+[ext_resource type="Texture2D" uid="uid://bsxofpil2kp56" path="res://images/gg5.png" id="5_51urh"]
+[ext_resource type="Texture2D" uid="uid://kggllp35rmt4" path="res://images/gg6.png" id="6_drpts"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_n8w4k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_oiay5")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_oiay5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_7e4us")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_6usvx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_yu5s1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_51urh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_drpts")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
-radius = 64.28063
+radius = 13.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_d7wyv"]
 radius = 327.0
@@ -13,8 +52,10 @@ radius = 327.0
 collision_layer = 64
 collision_mask = 32
 
-[node name="sprite" type="Sprite2D" parent="." unique_id=1169520795]
-texture = ExtResource("1_d7wyv")
+[node name="sprite" type="AnimatedSprite2D" parent="." unique_id=2048171477]
+sprite_frames = SubResource("SpriteFrames_n8w4k")
+animation = &"walk"
+speed_scale = 2.5
 
 [node name="body_shape" type="CollisionShape2D" parent="." unique_id=1784528730]
 shape = SubResource("CircleShape2D_body")

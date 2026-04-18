@@ -15,10 +15,10 @@ script = ExtResource("2_6fnek")
 [node name="enemies" type="Node2D" parent="." unique_id=286288996]
 
 [node name="spawner" parent="enemies" unique_id=1588589298 instance=ExtResource("3_6o5hi")]
-position = Vector2(268, 851)
+position = Vector2(78, 678)
 
 [node name="spawner2" parent="enemies" unique_id=221287589 instance=ExtResource("3_6o5hi")]
-position = Vector2(1803, 104)
+position = Vector2(1172, 128)
 
 [node name="towers" type="Node2D" parent="." unique_id=1975820466]
 
