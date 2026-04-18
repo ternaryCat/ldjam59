@@ -18,6 +18,9 @@ const DRIFT_DECAY: float = 1.5
 const SPEED_MULT_MIN: float = 0.85
 const SPEED_MULT_MAX: float = 1.15
 const TARGET_JITTER: float = 25.0
+const PLAYER_CTRL_SPEED_FACTOR: float = 0.75
+const PLAYER_CTRL_ESCAPE_FACTOR: float = 0.15
+const PLAYER_CTRL_ATTACK_MULT: float = 3.0
 
 var _in_field: bool = false
 var _player: CharacterBody2D = null
@@ -65,18 +68,20 @@ func _physics_process(delta: float) -> void:
 			_slow_factor = 1.0
 			_refresh_tint()
 	var player_controlled: bool = _in_field and Input.is_action_pressed("activate")
-	var direction := _desired_direction()
+	var direction := _compose_direction(player_controlled)
 	if direction != Vector2.ZERO and not player_controlled:
 		_drift_angle += randf_range(-_drift_impulse, _drift_impulse) * delta
 		_drift_angle -= _drift_angle * DRIFT_DECAY * delta
 		_drift_angle = clampf(_drift_angle, -_drift_cap, _drift_cap)
 		direction = direction.rotated(_drift_angle)
-	velocity = direction * speed * _speed_mult * _slow_factor + _crowd_push()
+	var move_mult := _speed_mult * _slow_factor
+	if player_controlled:
+		move_mult *= PLAYER_CTRL_SPEED_FACTOR
+	velocity = direction * speed * move_mult + _crowd_push()
 	move_and_slide()
 	if direction != Vector2.ZERO:
 		rotation = direction.angle()
-	if not player_controlled:
-		_attack_touching_building()
+	_attack_touching_building(player_controlled)
 
 
 func _crowd_push() -> Vector2:
@@ -120,14 +125,24 @@ func _refresh_tint() -> void:
 	_sprite.modulate = base
 
 
-func _desired_direction() -> Vector2:
-	if _in_field and Input.is_action_pressed("activate"):
-		if _player == null:
-			return Vector2.ZERO
-		var v := _player.get_real_velocity()
-		if v.length_squared() < 25.0:
-			return Vector2.ZERO
-		return v.normalized()
+func _compose_direction(player_controlled: bool) -> Vector2:
+	if not player_controlled:
+		return _own_direction()
+	var player_dir := _player_direction()
+	var own_dir := _own_direction()
+	return player_dir + own_dir * PLAYER_CTRL_ESCAPE_FACTOR
+
+
+func _player_direction() -> Vector2:
+	if _player == null:
+		return Vector2.ZERO
+	var v := _player.get_real_velocity()
+	if v.length_squared() < 25.0:
+		return Vector2.ZERO
+	return v.normalized()
+
+
+func _own_direction() -> Vector2:
 	if not _buildings_in_range.is_empty():
 		return Vector2.ZERO
 	var target := _pick_target_building()
@@ -139,13 +154,16 @@ func _desired_direction() -> Vector2:
 	return to_target.normalized()
 
 
-func _attack_touching_building() -> void:
+func _attack_touching_building(slowed: bool) -> void:
 	if _attack_cooldown > 0.0 or _buildings_in_range.is_empty():
 		return
 	var target := _buildings_in_range[0]
 	if target.has_method("take_damage"):
 		target.take_damage(attack_damage)
-	_attack_cooldown = attack_interval
+	var interval := attack_interval
+	if slowed:
+		interval *= PLAYER_CTRL_ATTACK_MULT
+	_attack_cooldown = interval
 
 
 func _pick_target_building() -> Node2D:

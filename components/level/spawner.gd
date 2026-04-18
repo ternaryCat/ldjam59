@@ -4,8 +4,8 @@ signal finished
 
 const ENEMY_SCENE: PackedScene = preload("res://components/level/enemy.tscn")
 
-@export var spawn_interval: float = 0.5
-@export var max_spawns: int = 100
+@export var spawn_interval: float = 2
+@export var max_spawns: int = 30
 @export var auto_start: bool = false
 
 var _spawned: int = 0
