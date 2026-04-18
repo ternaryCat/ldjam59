@@ -2,9 +2,9 @@ extends Sprite2D
 
 @export var speed: float = 900.0
 @export var turn_rate: float = 6.0
-@export var damage: int = 15
+@export var damage: int = 1
 @export var slow_duration: float = 3.0
-@export var slow_factor: float = 0.35
+@export var slow_factor: float = 0.1
 @export var lifetime: float = 2.5
 
 var _velocity: Vector2 = Vector2.ZERO

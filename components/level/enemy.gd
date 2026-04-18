@@ -19,7 +19,7 @@ const SPEED_MULT_MIN: float = 0.85
 const SPEED_MULT_MAX: float = 1.15
 const TARGET_JITTER: float = 25.0
 const PLAYER_CTRL_SPEED_FACTOR: float = 0.75
-const PLAYER_CTRL_ESCAPE_FACTOR: float = 0.15
+const PLAYER_CTRL_ESCAPE_FACTOR: float = 0.08
 const PLAYER_CTRL_ATTACK_MULT: float = 3.0
 
 var _in_field: bool = false
@@ -79,8 +79,11 @@ func _physics_process(delta: float) -> void:
 		move_mult *= PLAYER_CTRL_SPEED_FACTOR
 	velocity = direction * speed * move_mult + _crowd_push()
 	move_and_slide()
-	if direction != Vector2.ZERO:
-		rotation = direction.angle()
+	var anim: StringName = &"walk" if direction != Vector2.ZERO else &"idle"
+	if _sprite.animation != anim or not _sprite.is_playing():
+		_sprite.play(anim)
+	if direction.x != 0.0:
+		_sprite.flip_h = direction.x < 0.0
 	_attack_touching_building(player_controlled)
 
 

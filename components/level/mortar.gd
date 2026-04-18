@@ -64,3 +64,20 @@ func _fire(target: Node2D) -> void:
 	var dist := from.distance_to(to)
 	var flight_time := maxf(dist * flight_time_per_px, flight_time_min)
 	shell.launch(from, to, flight_time)
+
+
+func get_spec() -> Dictionary:
+	var shape: CollisionShape2D = get_node_or_null("vision/shape")
+	var r := 0.0
+	if shape and shape.shape is CircleShape2D:
+		r = (shape.shape as CircleShape2D).radius
+	var shell: Node = SHELL_SCENE.instantiate()
+	var dmg: int = shell.splash_damage
+	shell.free()
+	return {
+		"range": r,
+		"min_range": min_range,
+		"reload": fire_interval,
+		"damage": dmg,
+		"damage_label": "Splash",
+	}

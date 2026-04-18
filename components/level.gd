@@ -7,27 +7,18 @@ const RANGE_INDICATOR_SCENE: PackedScene = preload("res://components/level/range
 const TOWERS := {
 	"ballista": {
 		"scene": preload("res://components/level/tower.tscn"),
-		"base_cost": 100,
+		"base_cost": 80,
 		"label": "Ballista",
-		"range": 497.0,
-		"min_range": 0.0,
-		"reload": 0.6,
 	},
 	"mortar": {
 		"scene": preload("res://components/level/mortar.tscn"),
 		"base_cost": 180,
 		"label": "Mortar",
-		"range": 600.0,
-		"min_range": 180.0,
-		"reload": 1.8,
 	},
 	"mage": {
 		"scene": preload("res://components/level/mage.tscn"),
 		"base_cost": 150,
 		"label": "Mage",
-		"range": 500.0,
-		"min_range": 0.0,
-		"reload": 1.2,
 	},
 }
 
@@ -51,6 +42,7 @@ var _preview_tower: Node2D = null
 var _preview_indicator: Node2D = null
 var _preview_tower_id: String = ""
 var _preview_tile: Node = null
+var _tower_specs: Dictionary = {}
 
 @onready var _build_grid: Node2D = $build_grid
 @onready var _hud: CanvasLayer = $hud
@@ -60,6 +52,10 @@ var _preview_tile: Node = null
 
 func _ready() -> void:
 	_money = starting_money
+	for id in TOWERS:
+		var probe: Node = TOWERS[id].scene.instantiate()
+		_tower_specs[id] = probe.get_spec()
+		probe.free()
 	_build_grid.tile_clicked.connect(_on_tile_clicked)
 	_hud.wave_requested.connect(_on_wave_requested)
 	_hud.tower_requested.connect(_on_tower_requested)
@@ -152,9 +148,10 @@ func _start_preview(tower_id: String, tile: Node) -> void:
 	_preview_tower = tower
 	_preview_tower_id = tower_id
 	_preview_tile = tile
+	var spec: Dictionary = _tower_specs[tower_id]
 	var ind: Node2D = RANGE_INDICATOR_SCENE.instantiate()
-	ind.max_radius = TOWERS[tower_id].range
-	ind.min_radius = TOWERS[tower_id].min_range
+	ind.max_radius = spec.range
+	ind.min_radius = spec.min_range
 	var attach: Node = tower.get_node_or_null("vision")
 	if attach == null:
 		attach = tower
@@ -188,11 +185,16 @@ func _tower_cost(tower_id: String, tile: Node) -> int:
 
 func _tower_stats(tower_id: String) -> Array:
 	var stats: Array = []
-	var data: Dictionary = TOWERS[tower_id]
-	stats.append({"key": "Range", "value": str(int(data.range))})
-	if data.min_range > 0.0:
-		stats.append({"key": "Min", "value": str(int(data.min_range))})
-	stats.append({"key": "Reload", "value": "%.1fs" % data.reload})
+	var spec: Dictionary = _tower_specs[tower_id]
+	stats.append({"key": "Range", "value": str(int(spec.range))})
+	if spec.min_range > 0.0:
+		stats.append({"key": "Min", "value": str(int(spec.min_range))})
+	var reload: float = spec.reload
+	var rate: float = 0.0
+	if reload > 0.0:
+		rate = 1.0 / reload
+	stats.append({"key": "Rate", "value": "%.1f/s" % rate})
+	stats.append({"key": spec.damage_label, "value": str(spec.damage)})
 	return stats
 
 

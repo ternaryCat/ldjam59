@@ -1,19 +1,19 @@
 [gd_scene format=3 uid="uid://dmagebolt001"]
 
-[ext_resource type="Texture2D" uid="uid://dkudx226kqpc2" path="res://images/arrow.png" id="1_arrow"]
-[ext_resource type="Script" path="res://components/level/mage/bolt.gd" id="2_bolt"]
+[ext_resource type="Texture2D" uid="uid://dcrd5jndss0as" path="res://images/mage.png" id="1_ds3x5"]
+[ext_resource type="Script" uid="uid://dihr2ntdrfbcc" path="res://components/level/mage/bolt.gd" id="2_bolt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bolt"]
 radius = 6.0
 
-[node name="bolt" type="Sprite2D"]
+[node name="bolt" type="Sprite2D" unique_id=838857065]
 modulate = Color(0.55, 0.45, 1.3, 1)
-texture = ExtResource("1_arrow")
+texture = ExtResource("1_ds3x5")
 script = ExtResource("2_bolt")
 
-[node name="collision" type="Area2D" parent="."]
+[node name="collision" type="Area2D" parent="." unique_id=1792480392]
 collision_layer = 8
 collision_mask = 4
 
-[node name="shape" type="CollisionShape2D" parent="collision"]
+[node name="shape" type="CollisionShape2D" parent="collision" unique_id=1521449638]
 shape = SubResource("CircleShape2D_bolt")

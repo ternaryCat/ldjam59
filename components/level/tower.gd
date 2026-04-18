@@ -52,3 +52,20 @@ func _fire(target: Node2D) -> void:
 	shot.global_position = _shoot_point.global_position
 	var dir := (target.global_position - _shoot_point.global_position).normalized()
 	shot.launch(dir, shot_speed)
+
+
+func get_spec() -> Dictionary:
+	var shape: CollisionShape2D = get_node_or_null("vision/shape")
+	var r := 0.0
+	if shape and shape.shape is CircleShape2D:
+		r = (shape.shape as CircleShape2D).radius
+	var shot: Node = SHOT_SCENE.instantiate()
+	var dmg: int = shot.damage
+	shot.free()
+	return {
+		"range": r,
+		"min_range": 0.0,
+		"reload": fire_interval,
+		"damage": dmg,
+		"damage_label": "Damage",
+	}

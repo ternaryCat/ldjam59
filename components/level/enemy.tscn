@@ -2,6 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://d1g0n63ieyhwx" path="res://images/enemy1.png" id="1_m8og6"]
 [ext_resource type="Script" uid="uid://dtclb7wsx66ro" path="res://components/level/enemy.gd" id="2_m8og6"]
+[ext_resource type="Texture2D" uid="uid://ckme0tfrhi0ji" path="res://images/enemy2.png" id="3_uimft"]
+[ext_resource type="Texture2D" uid="uid://1qptkqendad" path="res://images/enemy3.png" id="4_ws2im"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ck80t"]
 animations = [{
@@ -13,9 +15,18 @@ animations = [{
 "name": &"idle",
 "speed": 5.0
 }, {
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_m8og6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_uimft")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ws2im")
+}],
 "loop": true,
-"name": &"new_animation",
+"name": &"walk",
 "speed": 5.0
 }]
 
@@ -35,7 +46,8 @@ attack_interval = 1.0
 
 [node name="sprite" type="AnimatedSprite2D" parent="." unique_id=1326946869]
 sprite_frames = SubResource("SpriteFrames_ck80t")
-animation = &"idle"
+animation = &"walk"
+speed_scale = 3.0
 
 [node name="body_shape" type="CollisionShape2D" parent="." unique_id=554354076]
 shape = SubResource("CircleShape2D_body")
