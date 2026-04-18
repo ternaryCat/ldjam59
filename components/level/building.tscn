@@ -11,7 +11,7 @@ radius = 69.72087
 
 [node name="building" type="StaticBody2D" unique_id=1782493252]
 collision_layer = 32
-collision_mask = 32
+collision_mask = 0
 script = ExtResource("2_bld01")
 
 [node name="sprite" type="Sprite2D" parent="."]

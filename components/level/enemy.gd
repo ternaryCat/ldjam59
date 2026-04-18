@@ -7,8 +7,11 @@ extends CharacterBody2D
 
 const HEALTHY_COLOR: Color = Color(1, 1, 1)
 const DEAD_COLOR: Color = Color(1, 0.2, 0.2)
+const SEPARATION_DIST: float = 45.0
+const NEIGHBOR_PUSH: float = 15.0
 
 var _in_field: bool = false
+var _player: CharacterBody2D = null
 var _hp: int
 var _buildings_in_range: Array[Node2D] = []
 var _attack_cooldown: float = 0.0
@@ -18,6 +21,7 @@ var _attack_cooldown: float = 0.0
 
 
 func _ready() -> void:
+	add_to_group("enemies")
 	_hp = max_hp
 	_collision.area_entered.connect(_on_area_entered)
 	_collision.area_exited.connect(_on_area_exited)
@@ -27,12 +31,33 @@ func _physics_process(delta: float) -> void:
 	_attack_cooldown -= delta
 	_cleanup_buildings()
 	var direction := _desired_direction()
-	velocity = direction * speed
+	velocity = direction * speed + _crowd_push()
 	move_and_slide()
 	if direction != Vector2.ZERO:
 		rotation = direction.angle()
 	if not (_in_field and Input.is_action_pressed("activate")):
 		_attack_touching_building()
+
+
+func _crowd_push() -> Vector2:
+	var push := Vector2.ZERO
+	for other in get_tree().get_nodes_in_group("enemies"):
+		if other == self:
+			continue
+		push += _repel_from(other)
+	for p in get_tree().get_nodes_in_group("player"):
+		push += _repel_from(p)
+	return push * NEIGHBOR_PUSH
+
+
+func _repel_from(other: Node) -> Vector2:
+	if not (other is Node2D):
+		return Vector2.ZERO
+	var offset := global_position - (other as Node2D).global_position
+	var d := offset.length()
+	if d >= SEPARATION_DIST or d <= 0.01:
+		return Vector2.ZERO
+	return offset / d * (SEPARATION_DIST - d)
 
 
 func take_damage(amount: int) -> void:
@@ -46,7 +71,12 @@ func take_damage(amount: int) -> void:
 
 func _desired_direction() -> Vector2:
 	if _in_field and Input.is_action_pressed("activate"):
-		return Input.get_vector("left", "right", "top", "down")
+		if _player == null:
+			return Vector2.ZERO
+		var v := _player.get_real_velocity()
+		if v.length_squared() < 25.0:
+			return Vector2.ZERO
+		return v.normalized()
 	if not _buildings_in_range.is_empty():
 		return Vector2.ZERO
 	var target := _find_nearest_building()
@@ -89,6 +119,9 @@ func _cleanup_buildings() -> void:
 func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("signal_field"):
 		_in_field = true
+		var owner_node := area.get_parent()
+		if owner_node is CharacterBody2D:
+			_player = owner_node
 		return
 	var parent := area.get_parent()
 	if parent is Node2D and parent.is_in_group("buildings"):

@@ -16,7 +16,7 @@ script = ExtResource("2_ovbxm")
 [node name="body" type="StaticBody2D" parent="."]
 position = Vector2(0, -50)
 collision_layer = 32
-collision_mask = 32
+collision_mask = 0
 
 [node name="body_shape" type="CollisionShape2D" parent="body"]
 shape = SubResource("CircleShape2D_tower_body")
