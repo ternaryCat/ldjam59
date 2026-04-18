@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cmre6hhliwtpl"]
+
+[ext_resource type="Texture2D" uid="uid://cvxbsh0y4gur7" path="res://icon.svg" id="1_jjmsg"]
+[ext_resource type="Script" path="res://components/level/building.gd" id="2_bld01"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wiuyy"]
+radius = 69.72087
+
+[node name="building" type="Sprite2D" unique_id=1782493252]
+texture = ExtResource("1_jjmsg")
+script = ExtResource("2_bld01")
+
+[node name="collision" type="Area2D" parent="." unique_id=1978180802]
+collision_layer = 17
+collision_mask = 4
+
+[node name="shape" type="CollisionShape2D" parent="collision" unique_id=1891854416]
+shape = SubResource("CircleShape2D_wiuyy")
