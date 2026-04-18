@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://qllk5gttkw2r"]
+
+[ext_resource type="Texture2D" uid="uid://cvxbsh0y4gur7" path="res://icon.svg" id="1_6ii7j"]
+[ext_resource type="Script" path="res://components/level/spawner.gd" id="2_spawn"]
+
+[node name="spawner" type="Node2D" unique_id=1588589298]
+script = ExtResource("2_spawn")
+
+[node name="texture" type="Sprite2D" parent="." unique_id=450752235]
+texture = ExtResource("1_6ii7j")

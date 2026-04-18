@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://b6tdgp3g2i7k2" path="res://components/level/player.tscn" id="1_ouk1x"]
 [ext_resource type="Script" uid="uid://cmb27xme82kug" path="res://components/level/player.gd" id="2_6fnek"]
-[ext_resource type="PackedScene" uid="uid://eyln1wkn80r" path="res://components/level/enemy.tscn" id="3_6fnek"]
+[ext_resource type="PackedScene" uid="uid://qllk5gttkw2r" path="res://components/level/spawner.tscn" id="3_6o5hi"]
 [ext_resource type="PackedScene" uid="uid://dmyske8pf6rii" path="res://components/level/tower.tscn" id="4_alc75"]
 [ext_resource type="PackedScene" uid="uid://cmre6hhliwtpl" path="res://components/level/building.tscn" id="5_6o5hi"]
 
@@ -14,11 +14,11 @@ script = ExtResource("2_6fnek")
 
 [node name="enemies" type="Node2D" parent="." unique_id=286288996]
 
-[node name="enemy" parent="enemies" unique_id=408884908 instance=ExtResource("3_6fnek")]
-position = Vector2(187, 531)
+[node name="spawner" parent="enemies" unique_id=1588589298 instance=ExtResource("3_6o5hi")]
+position = Vector2(268, 851)
 
-[node name="enemy2" parent="enemies" unique_id=1736653676 instance=ExtResource("3_6fnek")]
-position = Vector2(576, 94)
+[node name="spawner2" parent="enemies" unique_id=221287589 instance=ExtResource("3_6o5hi")]
+position = Vector2(1803, 104)
 
 [node name="towers" type="Node2D" parent="." unique_id=1975820466]
 
