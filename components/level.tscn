@@ -123,6 +123,10 @@ tile_color = 1
 position = Vector2(-67, 269)
 tile_color = 1
 
+[node name="tile23" parent="build_grid/tile23" unique_id=1205399903 instance=ExtResource("8_til")]
+position = Vector2(116, -43)
+tile_color = 2
+
 [node name="tile24" parent="build_grid" unique_id=26297863 instance=ExtResource("8_til")]
 position = Vector2(-163, 269)
 tile_color = 1
