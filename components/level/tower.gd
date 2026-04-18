@@ -1,4 +1,4 @@
-extends Sprite2D
+extends Node2D
 
 const SHOT_SCENE: PackedScene = preload("res://components/level/tower/shot.tscn")
 
@@ -9,6 +9,8 @@ var _targets: Array[Node2D] = []
 var _cooldown: float = 0.0
 
 @onready var _vision: Area2D = $vision
+@onready var _head: Sprite2D = $head
+@onready var _shoot_point: Node2D = $head/shoot_point
 
 
 func _ready() -> void:
@@ -21,9 +23,14 @@ func _physics_process(delta: float) -> void:
 	for i in range(_targets.size() - 1, -1, -1):
 		if not is_instance_valid(_targets[i]):
 			_targets.remove_at(i)
-	if _cooldown > 0.0 or _targets.is_empty():
+	if _targets.is_empty():
 		return
-	_fire(_targets[0])
+	var target := _targets[0]
+	_head.look_at(target.global_position)
+	_head.rotation += PI
+	if _cooldown > 0.0:
+		return
+	_fire(target)
 	_cooldown = fire_interval
 
 
@@ -40,6 +47,6 @@ func _on_target_exited(area: Area2D) -> void:
 func _fire(target: Node2D) -> void:
 	var shot := SHOT_SCENE.instantiate()
 	get_parent().add_child(shot)
-	shot.global_position = global_position
-	var dir := (target.global_position - global_position).normalized()
+	shot.global_position = _shoot_point.global_position
+	var dir := (target.global_position - _shoot_point.global_position).normalized()
 	shot.launch(dir, shot_speed)

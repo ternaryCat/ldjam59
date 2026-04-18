@@ -17,8 +17,9 @@ script = ExtResource("2_6fnek")
 position = Vector2(187, 531)
 
 [node name="enemy2" parent="enemies" unique_id=1736653676 instance=ExtResource("3_6fnek")]
-position = Vector2(906, 550)
+position = Vector2(485, 643)
 
 [node name="towers" type="Node2D" parent="." unique_id=1975820466]
 
 [node name="tower" parent="towers" unique_id=239535656 instance=ExtResource("4_alc75")]
+position = Vector2(1087, 399)
