@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://drgmy1sggay45"]
+
+[ext_resource type="Script" uid="uid://dsi5srk7tnstj" path="res://components/menu/menu.gd" id="1_menu"]
+[ext_resource type="PackedScene" uid="uid://qllk5gttkw2r" path="res://components/level/spawner.tscn" id="2_np6pp"]
+[ext_resource type="PackedScene" uid="uid://cmre6hhliwtpl" path="res://components/level/building.tscn" id="3_mwg2q"]
+
+[node name="Menu" type="Node2D" unique_id=1431519264]
+script = ExtResource("1_menu")
+
+[node name="ui" type="CanvasLayer" parent="." unique_id=504597385]
+
+[node name="background" type="ColorRect" parent="ui" unique_id=1510740077]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.08, 0.08, 0.1, 1)
+
+[node name="center" type="CenterContainer" parent="ui" unique_id=75902685]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="vbox" type="VBoxContainer" parent="ui/center" unique_id=1408582365]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="title" type="Label" parent="ui/center/vbox" unique_id=1762178663]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Tower Defence"
+horizontal_alignment = 1
+
+[node name="start" type="Button" parent="ui/center/vbox" unique_id=646835790]
+custom_minimum_size = Vector2(240, 48)
+layout_mode = 2
+text = "Начать"
+
+[node name="settings" type="Button" parent="ui/center/vbox" unique_id=538002535]
+custom_minimum_size = Vector2(240, 48)
+layout_mode = 2
+text = "Настройки"
+
+[node name="quit" type="Button" parent="ui/center/vbox" unique_id=1501449431]
+custom_minimum_size = Vector2(240, 48)
+layout_mode = 2
+text = "Выход"
+
+[node name="settings_dialog" type="AcceptDialog" parent="ui" unique_id=2045776665]
+title = "Настройки"
+size = Vector2i(420, 160)
+dialog_text = "Скоро: громкость, музыка, эффекты."
+
+[node name="spawner" parent="ui" unique_id=1588589298 instance=ExtResource("2_np6pp")]
+position = Vector2(116, 665)
+max_spawns = 40
+
+[node name="building" parent="ui" unique_id=1782493252 instance=ExtResource("3_mwg2q")]
+position = Vector2(1005, 513)
+max_hp = 999999999
+roof_color = Color(0.5577072, 0.5573487, 5.7756904e-07, 1)
+
+[connection signal="pressed" from="ui/center/vbox/start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="ui/center/vbox/settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="ui/center/vbox/quit" to="." method="_on_quit_pressed"]
