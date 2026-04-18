@@ -1,4 +1,4 @@
-extends AnimatedSprite2D
+extends CharacterBody2D
 
 @export var speed: float = 260.0
 @export var max_hp: int = 100
@@ -13,6 +13,7 @@ var _hp: int
 var _buildings_in_range: Array[Node2D] = []
 var _attack_cooldown: float = 0.0
 
+@onready var _sprite: AnimatedSprite2D = $sprite
 @onready var _collision: Area2D = $collision
 
 
@@ -25,11 +26,13 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	_attack_cooldown -= delta
 	_cleanup_buildings()
-	if _in_field and Input.is_action_pressed("activate"):
-		_follow_player_input(delta)
-		return
-	_attack_touching_building()
-	_advance_to_nearest_building(delta)
+	var direction := _desired_direction()
+	velocity = direction * speed
+	move_and_slide()
+	if direction != Vector2.ZERO:
+		rotation = direction.angle()
+	if not (_in_field and Input.is_action_pressed("activate")):
+		_attack_touching_building()
 
 
 func take_damage(amount: int) -> void:
@@ -38,29 +41,21 @@ func take_damage(amount: int) -> void:
 		queue_free()
 		return
 	var t := 1.0 - float(_hp) / float(max_hp)
-	modulate = HEALTHY_COLOR.lerp(DEAD_COLOR, t)
+	_sprite.modulate = HEALTHY_COLOR.lerp(DEAD_COLOR, t)
 
 
-func _follow_player_input(delta: float) -> void:
-	var direction := Input.get_vector("left", "right", "top", "down")
-	if direction == Vector2.ZERO:
-		return
-	position += direction * speed * delta
-	rotation = direction.angle()
-
-
-func _advance_to_nearest_building(delta: float) -> void:
+func _desired_direction() -> Vector2:
+	if _in_field and Input.is_action_pressed("activate"):
+		return Input.get_vector("left", "right", "top", "down")
 	if not _buildings_in_range.is_empty():
-		return
+		return Vector2.ZERO
 	var target := _find_nearest_building()
 	if target == null:
-		return
+		return Vector2.ZERO
 	var to_target := target.global_position - global_position
 	if to_target == Vector2.ZERO:
-		return
-	var direction := to_target.normalized()
-	position += direction * speed * delta
-	rotation = direction.angle()
+		return Vector2.ZERO
+	return to_target.normalized()
 
 
 func _attack_touching_building() -> void:

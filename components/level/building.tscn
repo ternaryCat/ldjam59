@@ -3,12 +3,22 @@
 [ext_resource type="Texture2D" uid="uid://cvxbsh0y4gur7" path="res://icon.svg" id="1_jjmsg"]
 [ext_resource type="Script" path="res://components/level/building.gd" id="2_bld01"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 50.0
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_wiuyy"]
 radius = 69.72087
 
-[node name="building" type="Sprite2D" unique_id=1782493252]
-texture = ExtResource("1_jjmsg")
+[node name="building" type="StaticBody2D" unique_id=1782493252]
+collision_layer = 32
+collision_mask = 32
 script = ExtResource("2_bld01")
+
+[node name="sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_jjmsg")
+
+[node name="body_shape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_body")
 
 [node name="collision" type="Area2D" parent="." unique_id=1978180802]
 collision_layer = 17
