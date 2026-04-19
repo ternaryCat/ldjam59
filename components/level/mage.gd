@@ -10,6 +10,7 @@ signal clicked(tower: Node2D)
 @export var bolt_damage: int = 1
 @export var slow_duration: float = 3.0
 @export var slow_factor: float = 0.1
+@export var bolt_count: int = 1
 @export var upgrades: Array[MageUpgrade] = []
 
 var _targets: Array[Node2D] = []
@@ -47,6 +48,7 @@ func _populate_default_upgrades() -> void:
 	lv1.slow_duration = slow_duration + 0.5
 	lv1.slow_factor = maxf(slow_factor - 0.02, 0.0)
 	lv1.vision_radius = base_vision + 50.0
+	lv1.bolt_count = 3
 	lv1.tint = Color(0.8, 0.55, 1.2, 1.0)
 	upgrades.append(lv1)
 	var lv2 := MageUpgrade.new()
@@ -56,6 +58,7 @@ func _populate_default_upgrades() -> void:
 	lv2.slow_duration = slow_duration + 1.0
 	lv2.slow_factor = maxf(slow_factor - 0.04, 0.0)
 	lv2.vision_radius = base_vision + 100.0
+	lv2.bolt_count = 7
 	lv2.tint = Color(0.95, 0.55, 1.35, 1.0)
 	upgrades.append(lv2)
 
@@ -72,27 +75,35 @@ func _physics_process(delta: float) -> void:
 		_head.look_at(aim_target.global_position)
 		_head.rotation += PI
 		return
-	var target := _pick_target()
-	if target == null:
+	var chosen := _pick_targets(bolt_count)
+	if chosen.is_empty():
 		return
-	_head.look_at(target.global_position)
+	_head.look_at(chosen[0].global_position)
 	_head.rotation += PI
-	_fire(target)
-	_last_target = target
+	for t in chosen:
+		_spawn_bolt(t)
+	if _sfx:
+		_sfx.play()
+	_last_target = chosen[0]
 	_cooldown = fire_interval
 
 
-func _pick_target() -> Node2D:
+func _pick_targets(n: int) -> Array[Node2D]:
 	var pool: Array[Node2D] = []
 	for t in _targets:
-		if is_instance_valid(t) and t != _last_target:
-			pool.append(t)
-	if not pool.is_empty():
-		return pool.pick_random()
-	for t in _targets:
 		if is_instance_valid(t):
-			return t
-	return null
+			pool.append(t)
+	if pool.is_empty():
+		return []
+	pool.shuffle()
+	if is_instance_valid(_last_target) and pool.has(_last_target) and pool.size() > 1:
+		pool.erase(_last_target)
+		pool.push_back(_last_target)
+	var result: Array[Node2D] = []
+	var count: int = mini(maxi(n, 1), pool.size())
+	for i in count:
+		result.append(pool[i])
+	return result
 
 
 func _on_target_entered(area: Area2D) -> void:
@@ -107,7 +118,7 @@ func _on_target_exited(area: Area2D) -> void:
 		_targets.erase(target)
 
 
-func _fire(target: Node2D) -> void:
+func _spawn_bolt(target: Node2D) -> void:
 	var bolt := BOLT_SCENE.instantiate()
 	get_parent().add_child(bolt)
 	bolt.global_position = _shoot_point.global_position
@@ -117,8 +128,6 @@ func _fire(target: Node2D) -> void:
 	var to_target := (target.global_position - _shoot_point.global_position).normalized()
 	var dir := to_target.rotated(randf_range(-initial_spread, initial_spread))
 	bolt.launch(dir, target)
-	if _sfx:
-		_sfx.play()
 
 
 func _on_body_input(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
@@ -158,6 +167,7 @@ func get_upgrade_spec() -> Dictionary:
 		"damage_label": "Magic",
 		"slow_factor": u.slow_factor,
 		"slow_duration": u.slow_duration,
+		"bolt_count": u.bolt_count,
 	}
 
 
@@ -169,6 +179,7 @@ func apply_upgrade() -> void:
 	bolt_damage = u.bolt_damage
 	slow_duration = u.slow_duration
 	slow_factor = u.slow_factor
+	bolt_count = u.bolt_count
 	_set_vision_radius(u.vision_radius)
 	_apply_tint(u.tint)
 	_level += 1
@@ -183,6 +194,7 @@ func get_spec() -> Dictionary:
 		"damage_label": "Magic",
 		"slow_factor": slow_factor,
 		"slow_duration": slow_duration,
+		"bolt_count": bolt_count,
 	}
 
 

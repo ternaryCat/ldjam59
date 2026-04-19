@@ -29,7 +29,7 @@ const TILE_MULT := {
 }
 
 const WAVE_COUNTS: Array[int] = [10, 30, 60, 100, 300]
-const WAVE_REWARDS: Array[int] = [80, 120, 200, 280]
+const WAVE_REWARDS: Array[int] = [120, 160, 240, 320]
 
 @export var starting_money: int = 120
 
@@ -229,6 +229,8 @@ func _upgrade_stats(current: Dictionary, next: Dictionary) -> Array:
 		var cur_slow: float = 1.0 - float(current.get("slow_factor", 1.0))
 		var next_slow: float = 1.0 - float(next.get("slow_factor", 1.0))
 		stats.append({"key": "Slow", "value": "%d%% → %d%%" % [int(round(cur_slow * 100.0)), int(round(next_slow * 100.0))]})
+	if next.has("bolt_count"):
+		stats.append({"key": "Bolts", "value": "%d → %d" % [int(current.get("bolt_count", 1)), int(next.get("bolt_count", 1))]})
 	return stats
 
 

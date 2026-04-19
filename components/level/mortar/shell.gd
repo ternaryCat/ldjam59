@@ -39,6 +39,7 @@ func _impact() -> void:
 	var vfx := IMPACT_SCENE.instantiate()
 	get_parent().add_child(vfx)
 	vfx.global_position = _to
+	vfx.max_radius = splash_radius
 	var space_state := get_world_2d().direct_space_state
 	var params := PhysicsShapeQueryParameters2D.new()
 	var shape := CircleShape2D.new()
