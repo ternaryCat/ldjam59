@@ -13,6 +13,7 @@ config_version=5
 config/name="tower defence ldjam59"
 run/main_scene="uid://drgmy1sggay45"
 config/features=PackedStringArray("4.6", "GL Compatibility")
+boot_splash/image="uid://dq3af7u0e4wr6"
 config/icon="res://icon.svg"
 
 [display]
@@ -70,3 +71,4 @@ activate={
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.23137255, 0.5176471, 0.039215688, 1)

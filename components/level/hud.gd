@@ -136,10 +136,11 @@ func set_buildings(buildings: Array) -> void:
 	_buildings_panel.set_buildings(buildings)
 
 
-func set_next_wave(count: int) -> void:
+func set_next_wave(count: int, reward: int = 0) -> void:
 	_has_next_wave = count > 0
 	if _has_next_wave:
 		_wave_preview.set_count(count)
+		_wave_preview.set_reward(reward)
 	_refresh_bottom()
 
 

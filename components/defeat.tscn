@@ -1,9 +1,33 @@
 [gd_scene format=3 uid="uid://ddefeatscn01"]
 
 [ext_resource type="Script" path="res://components/defeat/defeat.gd" id="1_def"]
+[ext_resource type="PackedScene" uid="uid://qllk5gttkw2r" path="res://components/level/spawner.tscn" id="2_spw"]
+[ext_resource type="PackedScene" uid="uid://cmre6hhliwtpl" path="res://components/level/building.tscn" id="3_bld"]
 
 [node name="Defeat" type="Node2D"]
 script = ExtResource("1_def")
+
+[node name="decor" type="Node2D" parent="."]
+
+[node name="bait" parent="decor" instance=ExtResource("3_bld")]
+position = Vector2(640, 520)
+max_hp = 999999999
+roof_color = Color(0.35, 0.2, 0.2, 1)
+
+[node name="spawner1" parent="decor" instance=ExtResource("2_spw")]
+position = Vector2(140, 140)
+max_spawns = 80
+auto_start = true
+
+[node name="spawner2" parent="decor" instance=ExtResource("2_spw")]
+position = Vector2(1140, 140)
+max_spawns = 80
+auto_start = true
+
+[node name="spawner3" parent="decor" instance=ExtResource("2_spw")]
+position = Vector2(640, 100)
+max_spawns = 80
+auto_start = true
 
 [node name="ui" type="CanvasLayer" parent="."]
 
@@ -14,7 +38,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.14, 0.06, 0.06, 1)
+color = Color(0.14, 0.05, 0.05, 0.55)
 
 [node name="center" type="CenterContainer" parent="ui"]
 anchors_preset = 15
@@ -29,16 +53,16 @@ theme_override_constants/separation = 20
 
 [node name="title" type="Label" parent="ui/center/vbox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1.0, 0.5, 0.5, 1)
-theme_override_font_sizes/font_size = 64
-text = "Поражение"
+theme_override_colors/font_color = Color(1.0, 0.45, 0.45, 1)
+theme_override_font_sizes/font_size = 96
+text = "Loose"
 horizontal_alignment = 1
 
 [node name="thanks" type="Label" parent="ui/center/vbox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "Спасибо, что играли!
-Сигналы пробились, но город не устоял."
+text = "Thanks for playing!
+The signal broke through, the city did not."
 horizontal_alignment = 1
 
 [node name="spacer" type="Control" parent="ui/center/vbox"]
@@ -48,17 +72,17 @@ layout_mode = 2
 [node name="restart" type="Button" parent="ui/center/vbox"]
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
-text = "Попробовать снова"
+text = "Try again"
 
 [node name="menu" type="Button" parent="ui/center/vbox"]
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
-text = "В меню"
+text = "Menu"
 
 [node name="quit" type="Button" parent="ui/center/vbox"]
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
-text = "Выход"
+text = "Quit"
 
 [connection signal="pressed" from="ui/center/vbox/restart" to="." method="_on_restart_pressed"]
 [connection signal="pressed" from="ui/center/vbox/menu" to="." method="_on_menu_pressed"]

@@ -14,12 +14,23 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
+[node name="topbar_bg" type="ColorRect" parent="root"]
+layout_mode = 1
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 620.0
+offset_bottom = 48.0
+color = Color(0, 0, 0, 0.55)
+mouse_filter = 2
+
 [node name="money" type="Label" parent="root"]
 layout_mode = 1
 offset_left = 16.0
 offset_top = 8.0
 offset_right = 200.0
-offset_bottom = 40.0
+offset_bottom = 44.0
+theme_override_colors/font_color = Color(1.0, 0.95, 0.5, 1)
+theme_override_font_sizes/font_size = 26
 text = "$0"
 mouse_filter = 2
 
@@ -27,8 +38,10 @@ mouse_filter = 2
 layout_mode = 1
 offset_left = 220.0
 offset_top = 8.0
-offset_right = 600.0
-offset_bottom = 40.0
+offset_right = 612.0
+offset_bottom = 44.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
 text = "Build"
 mouse_filter = 2
 

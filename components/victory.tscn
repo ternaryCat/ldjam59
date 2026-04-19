@@ -1,9 +1,39 @@
 [gd_scene format=3 uid="uid://dvictoryscn1"]
 
 [ext_resource type="Script" path="res://components/victory/victory.gd" id="1_vict"]
+[ext_resource type="PackedScene" uid="uid://dmyske8pf6rii" path="res://components/level/tower.tscn" id="2_twr"]
+[ext_resource type="PackedScene" uid="uid://ewya4twoj74c" path="res://components/level/mortar.tscn" id="3_mrt"]
+[ext_resource type="PackedScene" uid="uid://cr10sgbaehven" path="res://components/level/mage.tscn" id="4_mag"]
+[ext_resource type="PackedScene" uid="uid://cmre6hhliwtpl" path="res://components/level/building.tscn" id="5_bld"]
 
 [node name="Victory" type="Node2D"]
 script = ExtResource("1_vict")
+
+[node name="decor" type="Node2D" parent="."]
+
+[node name="building1" parent="decor" instance=ExtResource("5_bld")]
+position = Vector2(240, 480)
+max_hp = 999999999
+roof_color = Color(0.9, 0.35, 0.4, 1)
+
+[node name="building2" parent="decor" instance=ExtResource("5_bld")]
+position = Vector2(1040, 480)
+max_hp = 999999999
+roof_color = Color(0.4, 0.8, 0.6, 1)
+
+[node name="building3" parent="decor" instance=ExtResource("5_bld")]
+position = Vector2(640, 560)
+max_hp = 999999999
+roof_color = Color(0.45, 0.55, 1.0, 1)
+
+[node name="tower1" parent="decor" instance=ExtResource("2_twr")]
+position = Vector2(420, 360)
+
+[node name="tower2" parent="decor" instance=ExtResource("3_mrt")]
+position = Vector2(860, 360)
+
+[node name="tower3" parent="decor" instance=ExtResource("4_mag")]
+position = Vector2(640, 260)
 
 [node name="ui" type="CanvasLayer" parent="."]
 
@@ -14,7 +44,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.08, 0.12, 0.08, 1)
+color = Color(0.06, 0.12, 0.08, 0.55)
 
 [node name="center" type="CenterContainer" parent="ui"]
 anchors_preset = 15
@@ -30,15 +60,15 @@ theme_override_constants/separation = 20
 [node name="title" type="Label" parent="ui/center/vbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 1.0, 0.6, 1)
-theme_override_font_sizes/font_size = 64
-text = "Победа!"
+theme_override_font_sizes/font_size = 96
+text = "Win"
 horizontal_alignment = 1
 
 [node name="thanks" type="Label" parent="ui/center/vbox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "Спасибо, что играли!
-Сигналы услышаны, город выстоял."
+text = "Thanks for playing!
+Signals heard, the city stands."
 horizontal_alignment = 1
 
 [node name="spacer" type="Control" parent="ui/center/vbox"]
@@ -48,17 +78,17 @@ layout_mode = 2
 [node name="restart" type="Button" parent="ui/center/vbox"]
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
-text = "Начать заново"
+text = "Restart"
 
 [node name="menu" type="Button" parent="ui/center/vbox"]
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
-text = "В меню"
+text = "Menu"
 
 [node name="quit" type="Button" parent="ui/center/vbox"]
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
-text = "Выход"
+text = "Quit"
 
 [connection signal="pressed" from="ui/center/vbox/restart" to="." method="_on_restart_pressed"]
 [connection signal="pressed" from="ui/center/vbox/menu" to="." method="_on_menu_pressed"]

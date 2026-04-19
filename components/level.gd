@@ -347,7 +347,8 @@ func _enter_build() -> void:
 	_hud.set_money(_money)
 	_hud.show_build(_wave_index + 1, total_waves)
 	var next_count: int = WAVE_COUNTS[_wave_index] if _wave_index < total_waves else 0
-	_hud.set_next_wave(next_count)
+	var next_reward: int = WAVE_REWARDS[_wave_index] if _wave_index < WAVE_REWARDS.size() else 0
+	_hud.set_next_wave(next_count, next_reward)
 
 
 func _enter_wave() -> void:
