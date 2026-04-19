@@ -1,0 +1,102 @@
+[gd_scene format=3 uid="uid://ddemoscene001"]
+
+[ext_resource type="Texture2D" uid="uid://b70ern4vmdfkp" path="res://images/map.png" id="0_bg"]
+[ext_resource type="PackedScene" uid="uid://eyln1wkn80r" path="res://components/level/enemy.tscn" id="1_enm"]
+[ext_resource type="PackedScene" uid="uid://dmyske8pf6rii" path="res://components/level/tower.tscn" id="2_bal"]
+[ext_resource type="PackedScene" uid="uid://ewya4twoj74c" path="res://components/level/mortar.tscn" id="3_mor"]
+[ext_resource type="PackedScene" uid="uid://cr10sgbaehven" path="res://components/level/mage.tscn" id="4_mag"]
+[ext_resource type="Script" path="res://components/demo.gd" id="5_dmo"]
+
+[node name="Demo" type="Node2D"]
+script = ExtResource("5_dmo")
+
+[node name="background" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+texture = ExtResource("0_bg")
+
+[node name="towers" type="Node2D" parent="."]
+
+[node name="ballista" parent="towers" instance=ExtResource("2_bal")]
+position = Vector2(213, 550)
+fire_interval = 0.4
+shot_speed = 1000.0
+shot_damage = 50
+shot_pierce = 3
+shot_scale = Vector2(1.75, 1.75)
+
+[node name="mortar" parent="towers" instance=ExtResource("3_mor")]
+position = Vector2(640, 550)
+fire_interval = 1.5
+splash_radius = 160.0
+splash_damage = 50
+
+[node name="mage" parent="towers" instance=ExtResource("4_mag")]
+position = Vector2(1067, 550)
+fire_interval = 0.3
+initial_spread = 0.6
+bolt_damage = 5
+slow_duration = 5.0
+slow_factor = 0.04
+bolt_count = 7
+
+[node name="enemies" type="Node2D" parent="."]
+
+[node name="bal_e1" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(213, 250)
+max_hp = 999999999
+
+[node name="bal_e2" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(213, 330)
+max_hp = 999999999
+
+[node name="bal_e3" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(213, 410)
+max_hp = 999999999
+
+[node name="mor_e1" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(610, 180)
+max_hp = 999999999
+
+[node name="mor_e2" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(660, 180)
+max_hp = 999999999
+
+[node name="mor_e3" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(640, 230)
+max_hp = 999999999
+
+[node name="mor_e4" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(600, 230)
+max_hp = 999999999
+
+[node name="mor_e5" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(680, 230)
+max_hp = 999999999
+
+[node name="mag_e1" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(1067, 140)
+max_hp = 999999999
+
+[node name="mag_e2" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(1000, 180)
+max_hp = 999999999
+
+[node name="mag_e3" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(1134, 180)
+max_hp = 999999999
+
+[node name="mag_e4" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(1020, 240)
+max_hp = 999999999
+
+[node name="mag_e5" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(1067, 260)
+max_hp = 999999999
+
+[node name="mag_e6" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(1114, 240)
+max_hp = 999999999
+
+[node name="mag_e7" parent="enemies" instance=ExtResource("1_enm")]
+position = Vector2(1067, 200)
+max_hp = 999999999

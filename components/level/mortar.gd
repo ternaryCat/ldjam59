@@ -33,6 +33,7 @@ func _ready() -> void:
 		_body.input_event.connect(_on_body_input)
 	_sfx = AudioStreamPlayer2D.new()
 	_sfx.stream = ATTACK_SFX
+	_sfx.bus = &"SFX"
 	add_child(_sfx)
 	if upgrades.is_empty():
 		_populate_default_upgrades()
@@ -144,7 +145,7 @@ func get_upgrade_spec() -> Dictionary:
 		"min_range": u.min_range,
 		"reload": u.fire_interval,
 		"damage": u.splash_damage,
-		"damage_label": "Splash",
+		"damage_label": "Damage",
 		"splash_radius": u.splash_radius,
 	}
 
@@ -168,7 +169,7 @@ func get_spec() -> Dictionary:
 		"min_range": min_range,
 		"reload": fire_interval,
 		"damage": splash_damage,
-		"damage_label": "Splash",
+		"damage_label": "Damage",
 		"splash_radius": splash_radius,
 	}
 

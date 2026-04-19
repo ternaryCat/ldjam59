@@ -34,6 +34,7 @@ func _ready() -> void:
 		_body.input_event.connect(_on_body_input)
 	_sfx = AudioStreamPlayer2D.new()
 	_sfx.stream = ATTACK_SFX
+	_sfx.bus = &"SFX"
 	add_child(_sfx)
 	if upgrades.is_empty():
 		_populate_default_upgrades()
@@ -164,7 +165,7 @@ func get_upgrade_spec() -> Dictionary:
 		"min_range": 0.0,
 		"reload": u.fire_interval,
 		"damage": u.bolt_damage,
-		"damage_label": "Shots",
+		"damage_label": "Damage",
 		"slow_factor": u.slow_factor,
 		"slow_duration": u.slow_duration,
 		"bolt_count": u.bolt_count,
@@ -191,7 +192,7 @@ func get_spec() -> Dictionary:
 		"min_range": 0.0,
 		"reload": fire_interval,
 		"damage": bolt_damage,
-		"damage_label": "Shots",
+		"damage_label": "Damage",
 		"slow_factor": slow_factor,
 		"slow_duration": slow_duration,
 		"bolt_count": bolt_count,

@@ -43,6 +43,8 @@ func _on_hit(area: Area2D) -> void:
 	var hit_target := area.get_parent()
 	if hit_target == null or not hit_target.is_in_group("enemies"):
 		return
+	if is_instance_valid(_target) and hit_target != _target:
+		return
 	if hit_target.has_method("take_damage"):
 		hit_target.take_damage(damage)
 	if hit_target.has_method("apply_slow"):

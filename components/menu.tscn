@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://drgmy1sggay45"]
+[gd_scene load_steps=4 format=3 uid="uid://drgmy1sggay45"]
 
 [ext_resource type="Script" uid="uid://dsi5srk7tnstj" path="res://components/menu/menu.gd" id="1_menu"]
 [ext_resource type="PackedScene" uid="uid://qllk5gttkw2r" path="res://components/level/spawner.tscn" id="2_np6pp"]
@@ -38,22 +38,134 @@ horizontal_alignment = 1
 [node name="start" type="Button" parent="ui/center/vbox" unique_id=646835790]
 custom_minimum_size = Vector2(240, 48)
 layout_mode = 2
-text = "Начать"
+text = "Start"
 
 [node name="settings" type="Button" parent="ui/center/vbox" unique_id=538002535]
 custom_minimum_size = Vector2(240, 48)
 layout_mode = 2
-text = "Настройки"
+text = "Settings"
 
 [node name="quit" type="Button" parent="ui/center/vbox" unique_id=1501449431]
 custom_minimum_size = Vector2(240, 48)
 layout_mode = 2
-text = "Выход"
+text = "Exit"
 
-[node name="settings_dialog" type="AcceptDialog" parent="ui" unique_id=2045776665]
-title = "Настройки"
-size = Vector2i(420, 160)
-dialog_text = "Скоро: громкость, музыка, эффекты."
+[node name="settings_overlay" type="Control" parent="ui" unique_id=2045776665]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+
+[node name="backdrop" type="ColorRect" parent="ui/settings_overlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.6)
+mouse_filter = 0
+
+[node name="center" type="CenterContainer" parent="ui/settings_overlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="panel" type="PanelContainer" parent="ui/settings_overlay/center"]
+layout_mode = 2
+custom_minimum_size = Vector2(480, 0)
+
+[node name="margin" type="MarginContainer" parent="ui/settings_overlay/center/panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="vbox" type="VBoxContainer" parent="ui/settings_overlay/center/panel/margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="title" type="Label" parent="ui/settings_overlay/center/panel/margin/vbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="master_row" type="HBoxContainer" parent="ui/settings_overlay/center/panel/margin/vbox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="label" type="Label" parent="ui/settings_overlay/center/panel/margin/vbox/master_row"]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Master"
+
+[node name="slider" type="HSlider" parent="ui/settings_overlay/center/panel/margin/vbox/master_row"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+value = 0.8
+
+[node name="value" type="Label" parent="ui/settings_overlay/center/panel/margin/vbox/master_row"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+text = "80%"
+horizontal_alignment = 2
+
+[node name="music_row" type="HBoxContainer" parent="ui/settings_overlay/center/panel/margin/vbox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="label" type="Label" parent="ui/settings_overlay/center/panel/margin/vbox/music_row"]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Music"
+
+[node name="slider" type="HSlider" parent="ui/settings_overlay/center/panel/margin/vbox/music_row"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+value = 0.8
+
+[node name="value" type="Label" parent="ui/settings_overlay/center/panel/margin/vbox/music_row"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+text = "80%"
+horizontal_alignment = 2
+
+[node name="sfx_row" type="HBoxContainer" parent="ui/settings_overlay/center/panel/margin/vbox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="label" type="Label" parent="ui/settings_overlay/center/panel/margin/vbox/sfx_row"]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+text = "Effects"
+
+[node name="slider" type="HSlider" parent="ui/settings_overlay/center/panel/margin/vbox/sfx_row"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+value = 0.8
+
+[node name="value" type="Label" parent="ui/settings_overlay/center/panel/margin/vbox/sfx_row"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+text = "80%"
+horizontal_alignment = 2
+
+[node name="close" type="Button" parent="ui/settings_overlay/center/panel/margin/vbox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Close"
 
 [node name="spawner" parent="ui" unique_id=1588589298 instance=ExtResource("2_np6pp")]
 position = Vector2(116, 665)

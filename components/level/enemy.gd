@@ -64,6 +64,7 @@ func _ready() -> void:
 	_collision.area_entered.connect(_on_area_entered)
 	_collision.area_exited.connect(_on_area_exited)
 	_bite_sfx = AudioStreamPlayer2D.new()
+	_bite_sfx.bus = &"SFX"
 	add_child(_bite_sfx)
 	if _player == null:
 		_player = get_tree().get_first_node_in_group("player") as CharacterBody2D

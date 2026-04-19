@@ -17,6 +17,7 @@ func _ready() -> void:
 	_sfx = AudioStreamPlayer.new()
 	_sfx.stream = SIGNAL_SFX
 	_sfx.volume_db = volume_db
+	_sfx.bus = &"SFX"
 	_sfx.finished.connect(_on_sfx_finished)
 	add_child(_sfx)
 	print("[signal_area] sfx stream=", SIGNAL_SFX, " class=", SIGNAL_SFX.get_class() if SIGNAL_SFX else "null")

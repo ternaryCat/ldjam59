@@ -5,6 +5,19 @@ signal tower_requested(tower_id: String)
 signal confirm_requested
 signal cancel_requested
 
+const COIN_ICON: Texture2D = preload("res://images/coin.png")
+const STAT_ICONS: Dictionary = {
+	"Range": preload("res://images/range.png"),
+	"Min": preload("res://images/min_range.png"),
+	"Rate": preload("res://images/rate.png"),
+	"Damage": preload("res://images/atack.png"),
+	"Splash": preload("res://images/splash.png"),
+	"Pierce": preload("res://images/missles.png"),
+	"Splash r.": preload("res://images/splash.png"),
+	"Bolts": preload("res://images/missles.png"),
+	"Slow": preload("res://images/slow.png"),
+}
+
 @onready var _money_label: Label = $root/money
 @onready var _phase_label: Label = $root/phase
 @onready var _start_button: Button = $root/start_wave
@@ -110,20 +123,16 @@ func show_upgrade(title: String, stats: Array, cost: int, affordable: bool) -> v
 
 func _build_upgrade_card(item: Dictionary) -> Control:
 	var card := VBoxContainer.new()
-	card.custom_minimum_size = Vector2(200, 0)
+	card.custom_minimum_size = Vector2(220, 0)
 	var name_lbl := Label.new()
 	name_lbl.text = item.get("label", "")
 	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	card.add_child(name_lbl)
-	var cost_lbl := Label.new()
-	cost_lbl.text = "Cost: $%d" % item.get("cost", 0)
-	cost_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	card.add_child(cost_lbl)
+	card.add_child(_stat_row(COIN_ICON, "Cost", "$%d" % int(item.get("cost", 0))))
 	for stat in item.get("stats", []):
-		var s := Label.new()
-		s.text = "%s: %s" % [stat.get("key", ""), stat.get("value", "")]
-		s.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		card.add_child(s)
+		var key: String = stat.get("key", "")
+		var value: String = str(stat.get("value", ""))
+		card.add_child(_stat_row(STAT_ICONS.get(key, null), key, value))
 	return card
 
 
@@ -152,20 +161,16 @@ func _refresh_bottom() -> void:
 
 func _build_card(item: Dictionary) -> Control:
 	var card := VBoxContainer.new()
-	card.custom_minimum_size = Vector2(140, 0)
+	card.custom_minimum_size = Vector2(160, 0)
 	var name_lbl := Label.new()
 	name_lbl.text = item.get("label", "")
 	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	card.add_child(name_lbl)
-	var cost_lbl := Label.new()
-	cost_lbl.text = "Cost: $%d" % item.get("cost", 0)
-	cost_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	card.add_child(cost_lbl)
+	card.add_child(_stat_row(COIN_ICON, "Cost", "$%d" % int(item.get("cost", 0))))
 	for stat in item.get("stats", []):
-		var s := Label.new()
-		s.text = "%s: %s" % [stat.get("key", ""), stat.get("value", "")]
-		s.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		card.add_child(s)
+		var key: String = stat.get("key", "")
+		var value: String = str(stat.get("value", ""))
+		card.add_child(_stat_row(STAT_ICONS.get(key, null), key, value))
 	var btn := Button.new()
 	btn.text = "Build"
 	btn.disabled = not item.get("affordable", false)
@@ -173,6 +178,22 @@ func _build_card(item: Dictionary) -> Control:
 	btn.pressed.connect(func() -> void: tower_requested.emit(id))
 	card.add_child(btn)
 	return card
+
+
+func _stat_row(icon: Texture2D, label: String, value: String) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	var tex := TextureRect.new()
+	tex.custom_minimum_size = Vector2(20, 20)
+	tex.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	if icon:
+		tex.texture = icon
+	row.add_child(tex)
+	var lbl := Label.new()
+	lbl.text = "%s: %s" % [label, value]
+	row.add_child(lbl)
+	return row
 
 
 func _on_start_pressed() -> void:

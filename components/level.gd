@@ -31,7 +31,7 @@ const TILE_MULT := {
 const WAVE_COUNTS: Array[int] = [10, 30, 60, 100, 300]
 const WAVE_REWARDS: Array[int] = [160, 200, 280, 360]
 
-@export var starting_money: int = 120
+@export var starting_money: int = 1200
 
 var total_waves: int = WAVE_COUNTS.size()
 
@@ -55,6 +55,7 @@ var _upgrade_target: Node2D = null
 
 
 func _ready() -> void:
+	GameSettings.load_and_apply()
 	_money = starting_money
 	for id in TOWERS:
 		var probe: Node = TOWERS[id].scene.instantiate()
@@ -224,7 +225,7 @@ func _upgrade_stats(current: Dictionary, next: Dictionary) -> Array:
 	if next.has("pierce"):
 		stats.append({"key": "Pierce", "value": "%d → %d" % [int(current.get("pierce", 1)), int(next.get("pierce", 1))]})
 	if next.has("splash_radius"):
-		stats.append({"key": "Splash r.", "value": _delta_text(current.get("splash_radius", 0.0), next.get("splash_radius", 0.0))})
+		stats.append({"key": "Splash", "value": _delta_text(current.get("splash_radius", 0.0), next.get("splash_radius", 0.0))})
 	if next.has("slow_factor"):
 		var cur_slow: float = 1.0 - float(current.get("slow_factor", 1.0))
 		var next_slow: float = 1.0 - float(next.get("slow_factor", 1.0))

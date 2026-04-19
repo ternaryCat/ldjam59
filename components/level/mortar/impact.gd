@@ -14,6 +14,7 @@ var _sfx_done: bool = false
 func _ready() -> void:
 	var sfx := AudioStreamPlayer2D.new()
 	sfx.stream = BANG_SFX
+	sfx.bus = &"SFX"
 	sfx.finished.connect(func() -> void: _sfx_done = true)
 	add_child(sfx)
 	sfx.play()
