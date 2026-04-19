@@ -1,10 +1,12 @@
 extends Sprite2D
 
 @export var damage: int = 10
+@export var pierce: int = 1
 @export var lifetime: float = 3.0
 
 var _velocity: Vector2 = Vector2.ZERO
 var _life_left: float
+var _hit_targets: Array = []
 
 @onready var _collision: Area2D = $collision
 
@@ -28,6 +30,14 @@ func _physics_process(delta: float) -> void:
 
 func _on_hit(area: Area2D) -> void:
 	var target := area.get_parent()
-	if target and target.has_method("take_damage"):
-		target.take_damage(damage)
-	queue_free()
+	if target == null:
+		return
+	if target in _hit_targets:
+		return
+	if not target.has_method("take_damage"):
+		return
+	_hit_targets.append(target)
+	target.take_damage(damage)
+	pierce -= 1
+	if pierce <= 0:
+		queue_free()

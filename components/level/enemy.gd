@@ -1,9 +1,9 @@
 extends CharacterBody2D
 
 @export var speed: float = 260.0
-@export var max_hp: int = 100
+@export var max_hp: int = 50
 @export var attack_damage: int = 1
-@export var attack_interval: float = 0.5
+@export var attack_interval: float = 2
 
 const HEALTHY_COLOR: Color = Color(1, 1, 1)
 const DEAD_COLOR: Color = Color(1, 0.2, 0.2)

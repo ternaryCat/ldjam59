@@ -46,6 +46,7 @@ var _preview_indicator: Node2D = null
 var _preview_tower_id: String = ""
 var _preview_tile: Node = null
 var _tower_specs: Dictionary = {}
+var _upgrade_target: Node2D = null
 
 @onready var _build_grid: Node2D = $build_grid
 @onready var _hud: CanvasLayer = $hud
@@ -116,6 +117,9 @@ func _on_tower_requested(tower_id: String) -> void:
 
 
 func _on_confirm_requested() -> void:
+	if _upgrade_target != null:
+		_confirm_upgrade()
+		return
 	if _preview_tower == null:
 		return
 	var cost := _tower_cost(_preview_tower_id, _preview_tile)
@@ -124,6 +128,7 @@ func _on_confirm_requested() -> void:
 	_money -= cost
 	_preview_tile.mark_occupied()
 	_preview_tower.process_mode = Node.PROCESS_MODE_INHERIT
+	_connect_tower_click(_preview_tower)
 	_clear_preview_indicator()
 	_preview_tower = null
 	_preview_tower_id = ""
@@ -133,8 +138,102 @@ func _on_confirm_requested() -> void:
 
 
 func _on_cancel_requested() -> void:
+	if _upgrade_target != null:
+		_cancel_upgrade()
+		return
 	_clear_preview(true)
 	_refresh_picker()
+
+
+func _on_tower_clicked(tower: Node2D) -> void:
+	if _phase != Phase.BUILD:
+		return
+	if _preview_tower != null or _upgrade_target != null:
+		return
+	if _selected_tile != null:
+		_deselect()
+	if not tower.has_method("can_upgrade") or not tower.can_upgrade():
+		return
+	_start_upgrade_preview(tower)
+
+
+func _start_upgrade_preview(tower: Node2D) -> void:
+	var spec: Dictionary = tower.get_upgrade_spec()
+	if spec.is_empty():
+		return
+	var cost: int = spec.get("cost", 0)
+	_upgrade_target = tower
+	var ind: Node2D = RANGE_INDICATOR_SCENE.instantiate()
+	ind.max_radius = spec.get("range", 0.0)
+	ind.min_radius = spec.get("min_range", 0.0)
+	var attach: Node = tower.get_node_or_null("vision")
+	if attach == null:
+		attach = tower
+	attach.add_child(ind)
+	ind.position = Vector2.ZERO
+	_preview_indicator = ind
+	var current_spec: Dictionary = tower.get_spec()
+	var title := "Upgrade Lv. %d" % int(spec.get("level", tower.current_level() + 1))
+	_hud.show_upgrade(title, _upgrade_stats(current_spec, spec), cost, _money >= cost)
+
+
+func _confirm_upgrade() -> void:
+	var tower := _upgrade_target
+	if tower == null or not is_instance_valid(tower):
+		_cancel_upgrade()
+		return
+	if not tower.can_upgrade():
+		_cancel_upgrade()
+		return
+	var cost: int = tower.get_upgrade_cost()
+	if _money < cost:
+		return
+	_money -= cost
+	tower.apply_upgrade()
+	_clear_preview_indicator()
+	_upgrade_target = null
+	_hud.set_money(_money)
+	_hud.hide_picker()
+	_hud.hide_confirm()
+
+
+func _cancel_upgrade() -> void:
+	_clear_preview_indicator()
+	_upgrade_target = null
+	_hud.hide_picker()
+	_hud.hide_confirm()
+
+
+func _connect_tower_click(tower: Node2D) -> void:
+	if tower.has_signal("clicked") and not tower.is_connected("clicked", _on_tower_clicked):
+		tower.connect("clicked", _on_tower_clicked)
+
+
+func _upgrade_stats(current: Dictionary, next: Dictionary) -> Array:
+	var stats: Array = []
+	stats.append({"key": "Range", "value": _delta_text(current.get("range", 0.0), next.get("range", 0.0))})
+	if next.get("min_range", 0.0) > 0.0 or current.get("min_range", 0.0) > 0.0:
+		stats.append({"key": "Min", "value": _delta_text(current.get("min_range", 0.0), next.get("min_range", 0.0))})
+	var cur_reload: float = current.get("reload", 0.0)
+	var next_reload: float = next.get("reload", 0.0)
+	var cur_rate: float = 1.0 / cur_reload if cur_reload > 0.0 else 0.0
+	var next_rate: float = 1.0 / next_reload if next_reload > 0.0 else 0.0
+	stats.append({"key": "Rate", "value": "%.1f → %.1f/s" % [cur_rate, next_rate]})
+	var dmg_label: String = next.get("damage_label", "Damage")
+	stats.append({"key": dmg_label, "value": "%d → %d" % [int(current.get("damage", 0)), int(next.get("damage", 0))]})
+	if next.has("pierce"):
+		stats.append({"key": "Pierce", "value": "%d → %d" % [int(current.get("pierce", 1)), int(next.get("pierce", 1))]})
+	if next.has("splash_radius"):
+		stats.append({"key": "Splash r.", "value": _delta_text(current.get("splash_radius", 0.0), next.get("splash_radius", 0.0))})
+	if next.has("slow_factor"):
+		var cur_slow: float = 1.0 - float(current.get("slow_factor", 1.0))
+		var next_slow: float = 1.0 - float(next.get("slow_factor", 1.0))
+		stats.append({"key": "Slow", "value": "%d%% → %d%%" % [int(round(cur_slow * 100.0)), int(round(next_slow * 100.0))]})
+	return stats
+
+
+func _delta_text(a: float, b: float) -> String:
+	return "%d → %d" % [int(round(a)), int(round(b))]
 
 
 func _on_building_lost() -> void:
@@ -252,6 +351,8 @@ func _enter_wave() -> void:
 	_wave_index += 1
 	_active_spawners = 0
 	_clear_preview(true)
+	if _upgrade_target != null:
+		_cancel_upgrade()
 	_deselect()
 	_build_grid.visible = false
 	var spawner_list: Array = []
@@ -278,6 +379,8 @@ func _finish_wave() -> void:
 		_build_grid.visible = false
 		_hud.set_money(_money)
 		_hud.show_victory()
+		await get_tree().create_timer(1.5).timeout
+		get_tree().change_scene_to_file("res://components/victory.tscn")
 		return
 	_enter_build()
 
@@ -285,9 +388,13 @@ func _finish_wave() -> void:
 func _enter_defeat() -> void:
 	_phase = Phase.DEFEAT
 	_clear_preview(true)
+	if _upgrade_target != null:
+		_cancel_upgrade()
 	_deselect()
 	_build_grid.visible = false
 	for spawner in _spawners.get_children():
 		if spawner.has_method("set_enabled"):
 			spawner.set_enabled(false)
 	_hud.show_defeat()
+	await get_tree().create_timer(1.5).timeout
+	get_tree().change_scene_to_file("res://components/defeat.tscn")

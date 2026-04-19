@@ -4,8 +4,9 @@ signal finished
 
 const ENEMY_SCENE: PackedScene = preload("res://components/level/enemy.tscn")
 
-@export var spawn_interval: float = 2
+@export var spawn_interval: float = 0.8
 @export var max_spawns: int = 30
+@export var batch_size: int = 2
 @export var auto_start: bool = false
 
 var _spawned: int = 0
@@ -31,7 +32,10 @@ func _process(delta: float) -> void:
 	if _cooldown > 0.0:
 		return
 	_cooldown = spawn_interval
-	_spawn()
+	var remaining := max_spawns - _spawned
+	var burst := mini(maxi(batch_size, 1), remaining)
+	for i in burst:
+		_spawn()
 
 
 func start_wave(count: int = -1) -> void:

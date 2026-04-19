@@ -65,6 +65,8 @@ func show_defeat() -> void:
 
 
 func show_picker(items: Array) -> void:
+	_picker.offset_top = -200.0
+	_picker.offset_bottom = -20.0
 	for child in _picker_row.get_children():
 		child.queue_free()
 	for item in items:
@@ -85,6 +87,44 @@ func show_confirm(cost: int, affordable: bool) -> void:
 	_confirm_panel.visible = true
 	_picker.visible = false
 	_refresh_bottom()
+
+
+func show_upgrade(title: String, stats: Array, cost: int, affordable: bool) -> void:
+	_picker.offset_top = -300.0
+	_picker.offset_bottom = -90.0
+	for child in _picker_row.get_children():
+		child.queue_free()
+	_picker_row.add_child(_build_upgrade_card({
+		"id": "upgrade",
+		"label": title,
+		"cost": cost,
+		"affordable": affordable,
+		"stats": stats,
+	}))
+	_picker.visible = true
+	_confirm_button.text = "Confirm ($%d)" % cost
+	_confirm_button.disabled = not affordable
+	_confirm_panel.visible = true
+	_refresh_bottom()
+
+
+func _build_upgrade_card(item: Dictionary) -> Control:
+	var card := VBoxContainer.new()
+	card.custom_minimum_size = Vector2(200, 0)
+	var name_lbl := Label.new()
+	name_lbl.text = item.get("label", "")
+	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	card.add_child(name_lbl)
+	var cost_lbl := Label.new()
+	cost_lbl.text = "Cost: $%d" % item.get("cost", 0)
+	cost_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	card.add_child(cost_lbl)
+	for stat in item.get("stats", []):
+		var s := Label.new()
+		s.text = "%s: %s" % [stat.get("key", ""), stat.get("value", "")]
+		s.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		card.add_child(s)
+	return card
 
 
 func hide_confirm() -> void:

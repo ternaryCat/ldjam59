@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://ddefeatscn01"]
+
+[ext_resource type="Script" path="res://components/defeat/defeat.gd" id="1_def"]
+
+[node name="Defeat" type="Node2D"]
+script = ExtResource("1_def")
+
+[node name="ui" type="CanvasLayer" parent="."]
+
+[node name="background" type="ColorRect" parent="ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.14, 0.06, 0.06, 1)
+
+[node name="center" type="CenterContainer" parent="ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="vbox" type="VBoxContainer" parent="ui/center"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="title" type="Label" parent="ui/center/vbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1.0, 0.5, 0.5, 1)
+theme_override_font_sizes/font_size = 64
+text = "Поражение"
+horizontal_alignment = 1
+
+[node name="thanks" type="Label" parent="ui/center/vbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Спасибо, что играли!
+Сигналы пробились, но город не устоял."
+horizontal_alignment = 1
+
+[node name="spacer" type="Control" parent="ui/center/vbox"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+
+[node name="restart" type="Button" parent="ui/center/vbox"]
+custom_minimum_size = Vector2(280, 52)
+layout_mode = 2
+text = "Попробовать снова"
+
+[node name="menu" type="Button" parent="ui/center/vbox"]
+custom_minimum_size = Vector2(280, 52)
+layout_mode = 2
+text = "В меню"
+
+[node name="quit" type="Button" parent="ui/center/vbox"]
+custom_minimum_size = Vector2(280, 52)
+layout_mode = 2
+text = "Выход"
+
+[connection signal="pressed" from="ui/center/vbox/restart" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="ui/center/vbox/menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="ui/center/vbox/quit" to="." method="_on_quit_pressed"]
