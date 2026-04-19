@@ -8,6 +8,13 @@ extends CharacterBody2D
 const HEALTHY_COLOR: Color = Color(1, 1, 1)
 const DEAD_COLOR: Color = Color(1, 0.2, 0.2)
 const SLOW_TINT: Color = Color(0.55, 0.7, 1.2)
+const BITE_SFX: Array[AudioStream] = [
+	preload("res://images/bite1.mp3"),
+	preload("res://images/bite2.mp3"),
+	preload("res://images/bite3.mp3"),
+	preload("res://images/bite4.mp3"),
+	preload("res://images/bite5.mp3"),
+]
 const SEPARATION_DIST: float = 45.0
 const NEIGHBOR_PUSH: float = 15.0
 const DRIFT_IMPULSE_MIN: float = 2.0
@@ -20,6 +27,7 @@ const SPEED_MULT_MAX: float = 1.15
 const TARGET_JITTER: float = 25.0
 const PLAYER_CTRL_SPEED_FACTOR: float = 0.75
 const PLAYER_CTRL_ATTACK_MULT: float = 3.0
+const PLAYER_PULL: float = 0.35
 const FIELD_APPROACH_RATIO: float = 0.9
 const STUCK_SPEED_FRAC: float = 0.3
 const STUCK_TIME: float = 0.35
@@ -44,6 +52,7 @@ var _field_radius: float = 0.0
 var _stuck_time: float = 0.0
 var _stuck_sign: float = 0.0
 var _stuck_flip_timer: float = 0.0
+var _bite_sfx: AudioStreamPlayer2D
 
 @onready var _sprite: AnimatedSprite2D = $sprite
 @onready var _collision: Area2D = $collision
@@ -54,6 +63,10 @@ func _ready() -> void:
 	_hp = max_hp
 	_collision.area_entered.connect(_on_area_entered)
 	_collision.area_exited.connect(_on_area_exited)
+	_bite_sfx = AudioStreamPlayer2D.new()
+	add_child(_bite_sfx)
+	if _player == null:
+		_player = get_tree().get_first_node_in_group("player") as CharacterBody2D
 	_query = PhysicsShapeQueryParameters2D.new()
 	var shape := CircleShape2D.new()
 	shape.radius = SEPARATION_DIST
@@ -82,7 +95,7 @@ func _physics_process(delta: float) -> void:
 	if player_controlled and _player != null:
 		direction = _field_zone_direction()
 	else:
-		direction = _own_direction()
+		direction = _autonomous_direction()
 	if direction != Vector2.ZERO and not player_controlled:
 		_drift_angle += randf_range(-_drift_impulse, _drift_impulse) * delta
 		_drift_angle -= _drift_angle * DRIFT_DECAY * delta
@@ -207,16 +220,38 @@ func _own_direction() -> Vector2:
 	return to_target.normalized()
 
 
+func _autonomous_direction() -> Vector2:
+	var base := _own_direction()
+	if base == Vector2.ZERO:
+		return Vector2.ZERO
+	if _player == null or not is_instance_valid(_player):
+		return base
+	var to_player := _player.global_position - global_position
+	var d_sq := to_player.length_squared()
+	if d_sq < 1.0:
+		return base
+	var pull := to_player / sqrt(d_sq) * PLAYER_PULL
+	return (base + pull).normalized()
+
+
 func _attack_touching_building(player_controlled: bool) -> void:
 	if _attack_cooldown > 0.0 or _buildings_in_range.is_empty():
 		return
 	var target := _buildings_in_range[0]
 	if target.has_method("take_damage"):
 		target.take_damage(attack_damage)
+		_play_bite()
 	var interval := attack_interval
 	if player_controlled:
 		interval *= PLAYER_CTRL_ATTACK_MULT
 	_attack_cooldown = interval
+
+
+func _play_bite() -> void:
+	if _bite_sfx == null or BITE_SFX.is_empty():
+		return
+	_bite_sfx.stream = BITE_SFX[randi() % BITE_SFX.size()]
+	_bite_sfx.play()
 
 
 func _pick_target_building() -> Node2D:

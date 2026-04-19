@@ -13,6 +13,7 @@ var _spawned: int = 0
 var _cooldown: float = 0.0
 var _enabled: bool = false
 var _finished: bool = true
+var _batch_bonus: int = 0
 
 
 func _ready() -> void:
@@ -33,14 +34,15 @@ func _process(delta: float) -> void:
 		return
 	_cooldown = spawn_interval
 	var remaining := max_spawns - _spawned
-	var burst := mini(maxi(batch_size, 1), remaining)
+	var burst := mini(maxi(batch_size + _batch_bonus, 1), remaining)
 	for i in burst:
 		_spawn()
 
 
-func start_wave(count: int = -1) -> void:
+func start_wave(count: int = -1, batch_bonus: int = 0) -> void:
 	if count >= 0:
 		max_spawns = count
+	_batch_bonus = batch_bonus
 	_spawned = 0
 	_cooldown = 0.0
 	_finished = false

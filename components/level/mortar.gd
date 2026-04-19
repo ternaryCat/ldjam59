@@ -9,7 +9,7 @@ signal clicked(tower: Node2D)
 @export var min_range: float = 180.0
 @export var flight_time_per_px: float = 0.002
 @export var flight_time_min: float = 0.6
-@export var splash_radius: float = 120.0
+@export var splash_radius: float = 40.0
 @export var splash_damage: int = 25
 @export var upgrades: Array[MortarUpgrade] = []
 
@@ -40,32 +40,23 @@ func _ready() -> void:
 
 func _populate_default_upgrades() -> void:
 	var lv1 := MortarUpgrade.new()
-	lv1.cost = 150
-	lv1.fire_interval = 1.6
-	lv1.splash_radius = 150.0
-	lv1.splash_damage = 35
-	lv1.vision_radius = 450.0
-	lv1.min_range = 160.0
-	lv1.tint = Color(0.95, 0.85, 0.65, 1.0)
+	lv1.cost = 100
+	lv1.fire_interval = fire_interval
+	lv1.splash_radius = 80.0
+	lv1.splash_damage = splash_damage + 5
+	lv1.vision_radius = _vision_radius()
+	lv1.min_range = min_range
+	lv1.tint = Color(1.1, 0.6, 0.3, 1.0)
 	upgrades.append(lv1)
 	var lv2 := MortarUpgrade.new()
-	lv2.cost = 300
-	lv2.fire_interval = 1.4
-	lv2.splash_radius = 190.0
-	lv2.splash_damage = 50
-	lv2.vision_radius = 500.0
-	lv2.min_range = 150.0
-	lv2.tint = Color(1.0, 0.7, 0.4, 1.0)
+	lv2.cost = 200
+	lv2.fire_interval = fire_interval
+	lv2.splash_radius = 120.0
+	lv2.splash_damage = splash_damage + 10
+	lv2.vision_radius = _vision_radius()
+	lv2.min_range = min_range
+	lv2.tint = Color(1.2, 0.85, 0.4, 1.0)
 	upgrades.append(lv2)
-	var lv3 := MortarUpgrade.new()
-	lv3.cost = 600
-	lv3.fire_interval = 1.2
-	lv3.splash_radius = 240.0
-	lv3.splash_damage = 70
-	lv3.vision_radius = 550.0
-	lv3.min_range = 140.0
-	lv3.tint = Color(1.0, 0.5, 0.2, 1.0)
-	upgrades.append(lv3)
 
 
 func _physics_process(delta: float) -> void:

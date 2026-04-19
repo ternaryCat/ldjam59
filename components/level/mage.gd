@@ -39,33 +39,25 @@ func _ready() -> void:
 
 
 func _populate_default_upgrades() -> void:
+	var base_vision := _vision_radius()
 	var lv1 := MageUpgrade.new()
-	lv1.cost = 150
-	lv1.fire_interval = 0.18
-	lv1.bolt_damage = 2
-	lv1.slow_duration = 3.5
-	lv1.slow_factor = 0.08
-	lv1.vision_radius = 600.0
-	lv1.tint = Color(0.75, 0.55, 1.3, 1.0)
+	lv1.cost = 100
+	lv1.fire_interval = fire_interval
+	lv1.bolt_damage = bolt_damage + 1
+	lv1.slow_duration = slow_duration + 0.5
+	lv1.slow_factor = maxf(slow_factor - 0.02, 0.0)
+	lv1.vision_radius = base_vision + 50.0
+	lv1.tint = Color(0.8, 0.55, 1.2, 1.0)
 	upgrades.append(lv1)
 	var lv2 := MageUpgrade.new()
-	lv2.cost = 300
-	lv2.fire_interval = 0.15
-	lv2.bolt_damage = 3
-	lv2.slow_duration = 4.0
-	lv2.slow_factor = 0.06
-	lv2.vision_radius = 720.0
-	lv2.tint = Color(0.6, 0.4, 1.5, 1.0)
+	lv2.cost = 200
+	lv2.fire_interval = fire_interval
+	lv2.bolt_damage = bolt_damage + 2
+	lv2.slow_duration = slow_duration + 1.0
+	lv2.slow_factor = maxf(slow_factor - 0.04, 0.0)
+	lv2.vision_radius = base_vision + 100.0
+	lv2.tint = Color(0.95, 0.55, 1.35, 1.0)
 	upgrades.append(lv2)
-	var lv3 := MageUpgrade.new()
-	lv3.cost = 600
-	lv3.fire_interval = 0.12
-	lv3.bolt_damage = 5
-	lv3.slow_duration = 5.0
-	lv3.slow_factor = 0.04
-	lv3.vision_radius = 860.0
-	lv3.tint = Color(0.45, 0.3, 1.7, 1.0)
-	upgrades.append(lv3)
 
 
 func _physics_process(delta: float) -> void:

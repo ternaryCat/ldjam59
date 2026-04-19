@@ -12,12 +12,12 @@ const TOWERS := {
 	},
 	"mortar": {
 		"scene": preload("res://components/level/mortar.tscn"),
-		"base_cost": 180,
+		"base_cost": 200,
 		"label": "Mortar",
 	},
 	"mage": {
 		"scene": preload("res://components/level/mage.tscn"),
-		"base_cost": 150,
+		"base_cost": 120,
 		"label": "Mage",
 	},
 }
@@ -29,9 +29,9 @@ const TILE_MULT := {
 }
 
 const WAVE_COUNTS: Array[int] = [10, 30, 60, 100, 300]
+const WAVE_REWARDS: Array[int] = [80, 120, 200, 280]
 
-@export var starting_money: int = 300
-@export var wave_reward: int = 150
+@export var starting_money: int = 120
 
 var total_waves: int = WAVE_COUNTS.size()
 
@@ -369,13 +369,15 @@ func _enter_wave() -> void:
 		remainder = total_count - per_spawner * spawner_list.size()
 	for i in spawner_list.size():
 		var c: int = per_spawner + (1 if i < remainder else 0)
-		spawner_list[i].start_wave(c)
+		spawner_list[i].start_wave(c, _wave_index - 1)
 		_active_spawners += 1
 	_hud.show_wave(_wave_index, total_waves)
 
 
 func _finish_wave() -> void:
-	_money += wave_reward
+	var idx: int = _wave_index - 1
+	if idx >= 0 and idx < WAVE_REWARDS.size():
+		_money += WAVE_REWARDS[idx]
 	if _wave_index >= total_waves:
 		_phase = Phase.VICTORY
 		_build_grid.visible = false

@@ -38,36 +38,27 @@ func _ready() -> void:
 
 
 func _populate_default_upgrades() -> void:
+	var base_vision := _vision_radius()
 	var lv1 := BallistaUpgrade.new()
-	lv1.cost = 80
-	lv1.fire_interval = 0.5
-	lv1.shot_speed = 800.0
-	lv1.shot_damage = 15
-	lv1.shot_pierce = 2
-	lv1.shot_scale = Vector2(1.25, 1.25)
-	lv1.vision_radius = 600.0
-	lv1.tint = Color(1.0, 0.92, 0.75, 1.0)
+	lv1.cost = 60
+	lv1.fire_interval = fire_interval
+	lv1.shot_speed = shot_speed
+	lv1.shot_damage = shot_damage + 5
+	lv1.shot_pierce = shot_pierce + 1
+	lv1.shot_scale = Vector2(1.15, 1.15)
+	lv1.vision_radius = base_vision + 50.0
+	lv1.tint = Color(1.0, 0.95, 0.8, 1.0)
 	upgrades.append(lv1)
 	var lv2 := BallistaUpgrade.new()
-	lv2.cost = 160
-	lv2.fire_interval = 0.4
-	lv2.shot_speed = 900.0
-	lv2.shot_damage = 22
-	lv2.shot_pierce = 3
-	lv2.shot_scale = Vector2(1.5, 1.5)
-	lv2.vision_radius = 700.0
-	lv2.tint = Color(1.0, 0.75, 0.5, 1.0)
+	lv2.cost = 140
+	lv2.fire_interval = fire_interval
+	lv2.shot_speed = shot_speed
+	lv2.shot_damage = shot_damage + 10
+	lv2.shot_pierce = shot_pierce + 2
+	lv2.shot_scale = Vector2(1.3, 1.3)
+	lv2.vision_radius = base_vision + 100.0
+	lv2.tint = Color(1.1, 1.0, 0.7, 1.0)
 	upgrades.append(lv2)
-	var lv3 := BallistaUpgrade.new()
-	lv3.cost = 320
-	lv3.fire_interval = 0.3
-	lv3.shot_speed = 1000.0
-	lv3.shot_damage = 35
-	lv3.shot_pierce = 4
-	lv3.shot_scale = Vector2(1.75, 1.75)
-	lv3.vision_radius = 800.0
-	lv3.tint = Color(1.0, 0.55, 0.3, 1.0)
-	upgrades.append(lv3)
 
 
 func _physics_process(delta: float) -> void:
