@@ -13,7 +13,7 @@ config_version=5
 config/name="tower defence ldjam59"
 run/main_scene="uid://drgmy1sggay45"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-boot_splash/image="uid://dq3af7u0e4wr6"
+boot_splash/image="uid://4mbvmj3flgnx"
 config/icon="res://icon.svg"
 
 [display]

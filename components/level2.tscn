@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://b6tdgp3g2i7k2" path="res://components/level/player.tscn" id="3_byfrd"]
 [ext_resource type="Script" uid="uid://cmb27xme82kug" path="res://components/level/player.gd" id="4_j1nqw"]
 [ext_resource type="PackedScene" uid="uid://qllk5gttkw2r" path="res://components/level/spawner.tscn" id="5_51bqj"]
-[ext_resource type="Script" uid="uid://ihmdpqv14820" path="res://components/level/build_grid.gd" id="6_kekct"]
+[ext_resource type="Script" path="res://components/level/build_grid.gd" id="6_kekct"]
 [ext_resource type="PackedScene" path="res://components/level/build_tile.tscn" id="7_xmmss"]
 [ext_resource type="PackedScene" uid="uid://cmre6hhliwtpl" path="res://components/level/building.tscn" id="8_bsip2"]
 [ext_resource type="PackedScene" path="res://components/level/hud.tscn" id="9_b6hht"]

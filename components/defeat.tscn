@@ -1,37 +1,37 @@
 [gd_scene format=3 uid="uid://ddefeatscn01"]
 
-[ext_resource type="Script" path="res://components/defeat/defeat.gd" id="1_def"]
+[ext_resource type="Script" uid="uid://dlg8xv8112kj6" path="res://components/defeat/defeat.gd" id="1_def"]
 [ext_resource type="PackedScene" uid="uid://qllk5gttkw2r" path="res://components/level/spawner.tscn" id="2_spw"]
 [ext_resource type="PackedScene" uid="uid://cmre6hhliwtpl" path="res://components/level/building.tscn" id="3_bld"]
 
-[node name="Defeat" type="Node2D"]
+[node name="Defeat" type="Node2D" unique_id=182503028]
 script = ExtResource("1_def")
 
-[node name="decor" type="Node2D" parent="."]
+[node name="decor" type="Node2D" parent="." unique_id=815145445]
 
-[node name="bait" parent="decor" instance=ExtResource("3_bld")]
+[node name="bait" parent="decor" unique_id=486695507 instance=ExtResource("3_bld")]
 position = Vector2(640, 520)
 max_hp = 999999999
 roof_color = Color(0.35, 0.2, 0.2, 1)
 
-[node name="spawner1" parent="decor" instance=ExtResource("2_spw")]
+[node name="spawner1" parent="decor" unique_id=1417485915 instance=ExtResource("2_spw")]
 position = Vector2(140, 140)
 max_spawns = 80
 auto_start = true
 
-[node name="spawner2" parent="decor" instance=ExtResource("2_spw")]
+[node name="spawner2" parent="decor" unique_id=1089869728 instance=ExtResource("2_spw")]
 position = Vector2(1140, 140)
 max_spawns = 80
 auto_start = true
 
-[node name="spawner3" parent="decor" instance=ExtResource("2_spw")]
+[node name="spawner3" parent="decor" unique_id=1418727186 instance=ExtResource("2_spw")]
 position = Vector2(640, 100)
 max_spawns = 80
 auto_start = true
 
-[node name="ui" type="CanvasLayer" parent="."]
+[node name="ui" type="CanvasLayer" parent="." unique_id=496484266]
 
-[node name="background" type="ColorRect" parent="ui"]
+[node name="background" type="ColorRect" parent="ui" unique_id=51568100]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -40,46 +40,46 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.14, 0.05, 0.05, 0.55)
 
-[node name="center" type="CenterContainer" parent="ui"]
+[node name="center" type="CenterContainer" parent="ui" unique_id=592412890]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="vbox" type="VBoxContainer" parent="ui/center"]
+[node name="vbox" type="VBoxContainer" parent="ui/center" unique_id=29615628]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="title" type="Label" parent="ui/center/vbox"]
+[node name="title" type="Label" parent="ui/center/vbox" unique_id=839589598]
 layout_mode = 2
-theme_override_colors/font_color = Color(1.0, 0.45, 0.45, 1)
+theme_override_colors/font_color = Color(1, 0.45, 0.45, 1)
 theme_override_font_sizes/font_size = 96
-text = "Loose"
+text = "Defeat"
 horizontal_alignment = 1
 
-[node name="thanks" type="Label" parent="ui/center/vbox"]
+[node name="thanks" type="Label" parent="ui/center/vbox" unique_id=1471734339]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Thanks for playing!
-The signal broke through, the city did not."
+The city will fall..."
 horizontal_alignment = 1
 
-[node name="spacer" type="Control" parent="ui/center/vbox"]
+[node name="spacer" type="Control" parent="ui/center/vbox" unique_id=2074760230]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 
-[node name="restart" type="Button" parent="ui/center/vbox"]
+[node name="restart" type="Button" parent="ui/center/vbox" unique_id=1888658501]
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
 text = "Try again"
 
-[node name="menu" type="Button" parent="ui/center/vbox"]
+[node name="menu" type="Button" parent="ui/center/vbox" unique_id=543107757]
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
 text = "Menu"
 
-[node name="quit" type="Button" parent="ui/center/vbox"]
+[node name="quit" type="Button" parent="ui/center/vbox" unique_id=1396806068]
 custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
 text = "Quit"
