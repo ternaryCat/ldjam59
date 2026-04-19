@@ -29,7 +29,7 @@ const TILE_MULT := {
 }
 
 const WAVE_COUNTS: Array[int] = [10, 30, 60, 100, 300]
-const WAVE_REWARDS: Array[int] = [120, 160, 240, 320]
+const WAVE_REWARDS: Array[int] = [160, 200, 280, 360]
 
 @export var starting_money: int = 120
 
