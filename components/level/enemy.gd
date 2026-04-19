@@ -19,8 +19,12 @@ const SPEED_MULT_MIN: float = 0.85
 const SPEED_MULT_MAX: float = 1.15
 const TARGET_JITTER: float = 25.0
 const PLAYER_CTRL_SPEED_FACTOR: float = 0.75
-const PLAYER_CTRL_ESCAPE_FACTOR: float = 0.08
 const PLAYER_CTRL_ATTACK_MULT: float = 3.0
+const FIELD_APPROACH_RATIO: float = 0.9
+const STUCK_SPEED_FRAC: float = 0.3
+const STUCK_TIME: float = 0.35
+const STUCK_FLIP_TIME: float = 1.5
+const UNSTUCK_SWERVE: float = PI * 0.5
 
 var _in_field: bool = false
 var _player: CharacterBody2D = null
@@ -36,6 +40,10 @@ var _speed_mult: float = 1.0
 var _target_offset: Vector2 = Vector2.ZERO
 var _slow_factor: float = 1.0
 var _slow_time_left: float = 0.0
+var _field_radius: float = 0.0
+var _stuck_time: float = 0.0
+var _stuck_sign: float = 0.0
+var _stuck_flip_timer: float = 0.0
 
 @onready var _sprite: AnimatedSprite2D = $sprite
 @onready var _collision: Area2D = $collision
@@ -71,10 +79,8 @@ func _physics_process(delta: float) -> void:
 	var slowed: bool = _slow_time_left > 0.0
 	var fully_locked: bool = player_controlled and slowed
 	var direction: Vector2
-	if fully_locked:
-		direction = _player_direction()
-	elif player_controlled:
-		direction = _player_direction() + _own_direction() * PLAYER_CTRL_ESCAPE_FACTOR
+	if player_controlled and _player != null:
+		direction = _field_zone_direction()
 	else:
 		direction = _own_direction()
 	if direction != Vector2.ZERO and not player_controlled:
@@ -89,6 +95,8 @@ func _physics_process(delta: float) -> void:
 		move_mult *= PLAYER_CTRL_SPEED_FACTOR * _slow_factor
 	else:
 		move_mult *= _slow_factor
+	var desired_mag := speed * move_mult
+	direction = _apply_unstuck(direction, desired_mag, delta)
 	velocity = direction * speed * move_mult + _crowd_push()
 	move_and_slide()
 	var anim: StringName = &"walk" if direction != Vector2.ZERO else &"idle"
@@ -150,6 +158,43 @@ func _player_direction() -> Vector2:
 	return v.normalized()
 
 
+func _field_zone_direction() -> Vector2:
+	var to_player: Vector2 = _player.global_position - global_position
+	var dist: float = to_player.length()
+	if _field_radius <= 0.0 or dist < 0.001:
+		return _player_direction()
+	var ratio: float = dist / _field_radius
+	if ratio < FIELD_APPROACH_RATIO:
+		return to_player / dist
+	return -to_player / dist
+
+
+func _apply_unstuck(direction: Vector2, desired_mag: float, delta: float) -> Vector2:
+	if direction == Vector2.ZERO or desired_mag <= 1.0:
+		_stuck_time = 0.0
+		_stuck_sign = 0.0
+		_stuck_flip_timer = 0.0
+		return direction
+	var prev_speed := get_real_velocity().length()
+	if prev_speed >= desired_mag * STUCK_SPEED_FRAC:
+		_stuck_time = 0.0
+		_stuck_sign = 0.0
+		_stuck_flip_timer = 0.0
+		return direction
+	_stuck_time += delta
+	if _stuck_time < STUCK_TIME:
+		return direction
+	if _stuck_sign == 0.0:
+		_stuck_sign = 1.0 if randf() > 0.5 else -1.0
+		_stuck_flip_timer = 0.0
+	else:
+		_stuck_flip_timer += delta
+		if _stuck_flip_timer > STUCK_FLIP_TIME:
+			_stuck_sign = -_stuck_sign
+			_stuck_flip_timer = 0.0
+	return direction.rotated(UNSTUCK_SWERVE * _stuck_sign)
+
+
 func _own_direction() -> Vector2:
 	if not _buildings_in_range.is_empty():
 		return Vector2.ZERO
@@ -197,6 +242,9 @@ func _on_area_entered(area: Area2D) -> void:
 		var owner_node := area.get_parent()
 		if owner_node is CharacterBody2D:
 			_player = owner_node
+		var shape_node := area.get_node_or_null("shape") as CollisionShape2D
+		if shape_node and shape_node.shape is CircleShape2D:
+			_field_radius = (shape_node.shape as CircleShape2D).radius
 		return
 	var parent := area.get_parent()
 	if parent is Node2D and parent.is_in_group("buildings"):

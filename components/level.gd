@@ -237,6 +237,8 @@ func _delta_text(a: float, b: float) -> String:
 
 
 func _on_building_lost() -> void:
+	if not is_inside_tree():
+		return
 	_buildings_remaining -= 1
 	if _buildings_remaining <= 0 and _phase != Phase.DEFEAT and _phase != Phase.VICTORY:
 		_enter_defeat()
@@ -379,8 +381,7 @@ func _finish_wave() -> void:
 		_build_grid.visible = false
 		_hud.set_money(_money)
 		_hud.show_victory()
-		await get_tree().create_timer(1.5).timeout
-		get_tree().change_scene_to_file("res://components/victory.tscn")
+		_go_to_scene_after_delay("res://components/victory.tscn", 1.5)
 		return
 	_enter_build()
 
@@ -396,5 +397,14 @@ func _enter_defeat() -> void:
 		if spawner.has_method("set_enabled"):
 			spawner.set_enabled(false)
 	_hud.show_defeat()
-	await get_tree().create_timer(1.5).timeout
-	get_tree().change_scene_to_file("res://components/defeat.tscn")
+	_go_to_scene_after_delay("res://components/defeat.tscn", 1.5)
+
+
+func _go_to_scene_after_delay(path: String, delay: float) -> void:
+	var tree := get_tree()
+	if tree == null:
+		return
+	await tree.create_timer(delay).timeout
+	tree = get_tree()
+	if tree != null:
+		tree.change_scene_to_file(path)

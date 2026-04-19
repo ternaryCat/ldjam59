@@ -1,6 +1,7 @@
 extends Node2D
 
 const SHOT_SCENE: PackedScene = preload("res://components/level/tower/shot.tscn")
+const ATTACK_SFX: AudioStream = preload("res://images/tower.mp3")
 
 signal clicked(tower: Node2D)
 
@@ -14,6 +15,7 @@ signal clicked(tower: Node2D)
 var _targets: Array[Node2D] = []
 var _cooldown: float = 0.0
 var _level: int = 0
+var _sfx: AudioStreamPlayer2D
 
 @onready var _vision: Area2D = $vision
 @onready var _head: Sprite2D = $head
@@ -28,6 +30,9 @@ func _ready() -> void:
 	if _body:
 		_body.input_pickable = true
 		_body.input_event.connect(_on_body_input)
+	_sfx = AudioStreamPlayer2D.new()
+	_sfx.stream = ATTACK_SFX
+	add_child(_sfx)
 	if upgrades.is_empty():
 		_populate_default_upgrades()
 
@@ -102,6 +107,8 @@ func _fire(target: Node2D) -> void:
 	shot.scale = shot_scale
 	var dir := (target.global_position - _shoot_point.global_position).normalized()
 	shot.launch(dir, shot_speed)
+	if _sfx:
+		_sfx.play()
 
 
 func _on_body_input(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:

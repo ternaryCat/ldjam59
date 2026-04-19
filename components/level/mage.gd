@@ -1,6 +1,7 @@
 extends Node2D
 
 const BOLT_SCENE: PackedScene = preload("res://components/level/mage/bolt.tscn")
+const ATTACK_SFX: AudioStream = preload("res://images/mage.mp3")
 
 signal clicked(tower: Node2D)
 
@@ -15,6 +16,7 @@ var _targets: Array[Node2D] = []
 var _cooldown: float = 0.0
 var _last_target: Node2D = null
 var _level: int = 0
+var _sfx: AudioStreamPlayer2D
 
 @onready var _vision: Area2D = $vision
 @onready var _head: Sprite2D = $head
@@ -29,6 +31,9 @@ func _ready() -> void:
 	if _body:
 		_body.input_pickable = true
 		_body.input_event.connect(_on_body_input)
+	_sfx = AudioStreamPlayer2D.new()
+	_sfx.stream = ATTACK_SFX
+	add_child(_sfx)
 	if upgrades.is_empty():
 		_populate_default_upgrades()
 
@@ -120,6 +125,8 @@ func _fire(target: Node2D) -> void:
 	var to_target := (target.global_position - _shoot_point.global_position).normalized()
 	var dir := to_target.rotated(randf_range(-initial_spread, initial_spread))
 	bolt.launch(dir, target)
+	if _sfx:
+		_sfx.play()
 
 
 func _on_body_input(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
