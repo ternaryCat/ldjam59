@@ -174,7 +174,7 @@ func _make_pet_player(pos: Vector2) -> CharacterBody2D:
 		var sig_shape := sig.get_node_or_null("shape") as CollisionShape2D
 		if sig_shape:
 			var circle := CircleShape2D.new()
-			circle.radius = 120.0
+			circle.radius = 140.0
 			sig_shape.shape = circle
 	p.position = pos
 	_stage.add_child(p)
@@ -208,10 +208,10 @@ func _build_towers() -> void:
 # --- Slide 3: lure with signal field ---
 
 func _build_pull() -> void:
-	_make_building(Vector2(680, GROUND_Y), Color(0.9, 0.4, 0.3))
-	_make_tower(Vector2(520, GROUND_Y + 10), 180.0)
-	var player := _make_pet_player(Vector2(360, GROUND_Y))
-	_make_spawner(Vector2(60, GROUND_Y), 1.0, 1)
+	_make_building(Vector2(660, GROUND_Y), Color(0.9, 0.4, 0.3))
+	_make_tower(Vector2(440, GROUND_Y + 10), 220.0)
+	var player := _make_pet_player(Vector2(220, GROUND_Y))
+	_make_spawner(Vector2(60, GROUND_Y), 1.0, 2)
 	_animate_pet_player(player)
 	Input.action_press("activate")
 
@@ -219,10 +219,10 @@ func _build_pull() -> void:
 func _animate_pet_player(player: CharacterBody2D) -> void:
 	var sprite := player.get_node_or_null("sprite") as AnimatedSprite2D
 	var points := [
-		Vector2(440, GROUND_Y - 30),
-		Vector2(440, GROUND_Y + 30),
-		Vector2(280, GROUND_Y + 30),
 		Vector2(280, GROUND_Y - 30),
+		Vector2(280, GROUND_Y + 30),
+		Vector2(160, GROUND_Y + 30),
+		Vector2(160, GROUND_Y - 30),
 	]
 	var tween := player.create_tween().set_loops()
 	var prev: Vector2 = player.position
