@@ -1,0 +1,99 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://components/tutorial/tutorial.gd" id="1_tut"]
+
+[node name="Tutorial" type="Node2D"]
+script = ExtResource("1_tut")
+
+[node name="ui" type="CanvasLayer" parent="."]
+
+[node name="background" type="ColorRect" parent="ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.08, 0.08, 0.1, 1)
+
+[node name="center" type="CenterContainer" parent="ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="vbox" type="VBoxContainer" parent="ui/center"]
+custom_minimum_size = Vector2(720, 0)
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="title" type="Label" parent="ui/center/vbox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Defend the town"
+horizontal_alignment = 1
+
+[node name="viewport_container" type="SubViewportContainer" parent="ui/center/vbox"]
+custom_minimum_size = Vector2(720, 300)
+layout_mode = 2
+mouse_filter = 2
+stretch = true
+
+[node name="viewport" type="SubViewport" parent="ui/center/vbox/viewport_container"]
+own_world_2d = true
+handle_input_locally = false
+size = Vector2i(720, 300)
+render_target_update_mode = 4
+
+[node name="stage_bg" type="ColorRect" parent="ui/center/vbox/viewport_container/viewport"]
+offset_right = 720.0
+offset_bottom = 300.0
+mouse_filter = 2
+color = Color(0.231373, 0.517647, 0.0392157, 1)
+
+[node name="stage" type="Node2D" parent="ui/center/vbox/viewport_container/viewport"]
+
+[node name="description" type="Label" parent="ui/center/vbox"]
+custom_minimum_size = Vector2(720, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="prev" type="Button" parent="ui"]
+offset_left = 40.0
+offset_top = 320.0
+offset_right = 120.0
+offset_bottom = 400.0
+theme_override_font_sizes/font_size = 40
+text = "←"
+
+[node name="next" type="Button" parent="ui"]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 320.0
+offset_right = -40.0
+offset_bottom = 400.0
+theme_override_font_sizes/font_size = 32
+text = "→"
+
+[node name="skip" type="Button" parent="ui"]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = 64.0
+text = "Skip"
+
+[node name="dots" type="HBoxContainer" parent="ui"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -50.0
+offset_right = 80.0
+offset_bottom = -30.0
+theme_override_constants/separation = 12
+alignment = 1
